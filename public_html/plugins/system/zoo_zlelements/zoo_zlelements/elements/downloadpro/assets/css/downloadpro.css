@@ -1,0 +1,8 @@
+/**
+ * @package     ZL Elements
+ * @version     3.3.0
+ * @author      ZOOlanders - http://zoolanders.com
+ * @license     GNU General Public License v2 or later
+ */
+
+.yoo-zoo.element-download-button,.yoo-zoo.element-download-button span{display:block}.yoo-zoo.element-download-button{background:url(../images/download_button.png) no-repeat;display:inline-block}.yoo-zoo.element-download-button:link,.yoo-zoo.element-download-button:visited{color:#646464}.yoo-zoo.element-download-button:hover{color:#505050;text-decoration:none}.yoo-zoo.element-download-button>span{padding:0 26px 0 11px;background:url(../images/download_button.png) 100% -30px no-repeat}.yoo-zoo.element-download-button>span>span{height:25px;padding-right:4px;background:url(../images/download_button.png) 0 -60px repeat-x;overflow:hidden;font-size:12px;line-height:25px;font-weight:700}.yoo-zoo.element-download-button:hover{background-position:0 -90px}.yoo-zoo.element-download-button:hover>span{background-position:100% -120px}.yoo-zoo.element-download-button:hover>span>span{background-position:0 -150px}

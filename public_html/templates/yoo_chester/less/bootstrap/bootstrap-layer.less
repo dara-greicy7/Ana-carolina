@@ -1,0 +1,46 @@
+// Copyright (C) YOOtheme GmbH, YOOtheme Proprietary Use License (http://www.yootheme.com/license) */
+
+/* ========================================================================
+   Name:            Bootstrap layer
+   Description:     Compatibility layer to match UIkit and Bootstrap style
+ ========================================================================== */
+
+/* Button overrides
+ ========================================================================== */
+
+.btn:not(.uk-button-link):before { top: 0; }
+
+
+/* Form overrides
+ ========================================================================== */
+
+.input-append input,
+.input-prepend input {
+    height: 30px;
+    box-sizing: border-box;
+}
+
+.input-append .btn-group input,
+.input-prepend .btn-group input,
+.row-fluid input[class*="span"] { height: 32px;  }
+
+
+/* Form overrides
+ ========================================================================== */
+
+.nav-tabs.nav-stacked > li > a:focus { background-color: @global-muted-background; }
+
+/*
+ * Nav List
+ */
+
+.nav-list .divider {
+    margin-left: -15px;
+    margin-right: -15px;
+}
+
+/*
+ * Dropdowns
+ */
+
+.dropdown-menu { padding: 15px 0; }

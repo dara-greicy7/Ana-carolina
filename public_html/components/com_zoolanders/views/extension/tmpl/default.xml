@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="Extension View">
+		<message><![CDATA[Displays an Extension View]]></message>
+	</layout>
+
+	<fields name="params">
+		<fieldset name="params"	addfieldpath="/plugins/system/zlframework/zlframework/fields/joomla">
+			<field name="extension" type="zlux" required="true" addcontrol="extension">
+				<setfield id="fieldspath" type="zlmenuitem" label="Extension" />
+			</field>			
+		</fieldset>
+	</fields>
+</metadata>

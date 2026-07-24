@@ -1,0 +1,63 @@
+// Copyright (C) YOOtheme GmbH, YOOtheme Proprietary Use License (http://www.yootheme.com/license) */
+
+//
+// Component: Datepicker
+//
+// ========================================================================
+
+
+// Variables
+// ========================================================================
+
+@datepicker-nav-margin-bottom:                  @global-margin;
+@datepicker-nav-color:                          @global-color;
+@datepicker-nav-hover-color:                    @global-color;
+
+@datepicker-table-color:                        @global-color;
+
+@datepicker-table-hover-background:             rgba(0,0,0,0);
+@datepicker-table-hover-color:                  @global-color;
+@datepicker-table-onclick-color:                @global-color;
+
+@datepicker-table-active-background:            @global-muted-background;
+@datepicker-table-active-color:                 @global-link-color;
+
+@datepicker-table-muted-color:                  @global-muted-color;
+
+//
+// New
+//
+
+@datepicker-heading-font-family:                @global-alt-font-family;
+@datepicker-heading-text-transform:             @global-text-transform;
+
+
+// Component
+// ========================================================================
+
+.hook-datepicker-nav() {}
+
+.hook-datepicker-nav-item() {}
+
+.hook-datepicker-table-item() {}
+
+.hook-datepicker-table-item-hover() {}
+
+.hook-datepicker-table-item-onclick() {}
+
+.hook-datepicker-table-item-active() {}
+
+
+// Miscellaneous
+// ========================================================================
+
+.hook-datepicker-misc() {
+
+    .uk-datepicker-table { font-family: @datepicker-heading-font-family; }
+
+    .uk-datepicker-table th {
+        text-transform: @datepicker-heading-text-transform;
+        font-weight: normal;
+    }
+
+}

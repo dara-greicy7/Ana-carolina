@@ -1,0 +1,87 @@
+// Copyright (C) YOOtheme GmbH, YOOtheme Proprietary Use License (http://www.yootheme.com/license) */
+
+//
+// Component: Pagination
+//
+// ========================================================================
+
+
+// Variables
+// ========================================================================
+
+@pagination-padding-vertical:                   0;
+@pagination-line-height:                        @global-line-height;
+@pagination-background:                         rgba(0,0,0,0);
+@pagination-color:                              @global-muted-color;
+@pagination-hover-background:                   rgba(0,0,0,0);
+@pagination-hover-color:                        @global-color;
+@pagination-onclick-background:                 rgba(0,0,0,0);
+@pagination-onclick-color:                      @global-heading-color;
+
+@pagination-active-background:                  rgba(0,0,0,0);
+@pagination-active-color:                       @global-color;
+
+@pagination-disabled-background:                rgba(0,0,0,0);
+@pagination-disabled-color:                     lighten(@global-muted-color, 15%);
+
+//
+// New
+//
+
+@pagination-margin-vertical:                    5px;
+
+
+// Component
+// ========================================================================
+
+//
+// Items
+//
+
+.hook-pagination-item() {}
+
+// Link
+.hook-pagination-link() {}
+
+.hook-pagination-link-hover() {}
+
+.hook-pagination-link-active() {}
+
+// Active
+.hook-pagination-active() {}
+
+// Disabled
+.hook-pagination-disabled() {}
+
+
+// Miscellaneous
+// ========================================================================
+
+.hook-pagination-misc() {
+
+    .uk-pagination > li {
+        margin-left: @pagination-margin-vertical;
+        margin-right: @pagination-margin-vertical;
+    }
+
+    .uk-pagination > li:not(.uk-pagination-previous):not(.uk-pagination-next) > a {
+
+        position: relative;
+
+        &:before {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: @global-border-width;
+            width: 0;
+            background: @pagination-hover-color;
+            -webkit-transition: width .4s;
+            transition: width .4s;
+        }
+
+        &:hover:before { width: 100%; }
+
+    }
+
+}

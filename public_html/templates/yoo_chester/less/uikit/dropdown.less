@@ -1,0 +1,49 @@
+// Copyright (C) YOOtheme GmbH, YOOtheme Proprietary Use License (http://www.yootheme.com/license) */
+
+//
+// Component: Dropdown
+//
+// ========================================================================
+
+
+// Variables
+// ========================================================================
+
+@dropdown-z-index:                              @global-z-index + 20;
+@dropdown-padding:                              @global-margin-large;
+@dropdown-background:                           @global-background;
+@dropdown-color:                                @global-color;
+@dropdown-divider-border:                       fade(@global-border, 30%);
+
+@dropdown-navbar-color:                         @global-color;
+
+@dropdown-navbar-background:                    @global-background;
+
+//
+// New
+//
+
+@dropdown-box-shadow:                           0 0 20px 0 rgba(51,51,51,0.1);
+
+// Component
+// ========================================================================
+
+.hook-dropdown() { box-shadow: @dropdown-box-shadow; }
+
+
+// Modifier: `uk-dropdown-navbar`
+// ========================================================================
+
+.hook-dropdown-navbar() {}
+
+
+// Sub-object: `uk-dropdown-overlay`
+// ========================================================================
+
+.hook-dropdown-overlay() {}
+
+
+// Miscellaneous
+// ========================================================================
+
+.hook-dropdown-misc() {}

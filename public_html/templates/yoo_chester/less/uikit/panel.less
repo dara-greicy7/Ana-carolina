@@ -1,0 +1,120 @@
+// Copyright (C) YOOtheme GmbH, YOOtheme Proprietary Use License (http://www.yootheme.com/license) */
+
+//
+// Component: Panel
+//
+// ========================================================================
+
+
+// Variables
+// ========================================================================
+
+@panel-title-margin-bottom:                     @global-margin;
+@panel-title-font-size:                         round((@global-font-size * 1.6)); // 24px
+@panel-title-line-height:                       round((@panel-title-font-size * 1.333)); // 32px
+@panel-title-color:                             @global-heading-color;
+
+@panel-box-padding:                             @global-margin-large;
+@panel-box-background:                          @global-background;
+@panel-box-color:                               @global-color;
+@panel-box-title-color:                         @global-heading-color;
+@panel-box-badge-top:                           0;
+
+@panel-box-primary-background:                  @global-background;
+@panel-box-primary-color:                       @global-color;
+@panel-box-primary-title-color:                 @global-heading-color;
+
+@panel-box-secondary-background:                @global-muted-background;
+@panel-box-secondary-color:                     @global-color;
+@panel-box-secondary-title-color:               @global-heading-color;
+
+@panel-hover-padding:                           @global-margin;
+@panel-hover-color:                             @global-color;
+@panel-hover-hover-background:                  @panel-box-secondary-background;
+@panel-hover-hover-color:                       @global-color;
+
+@panel-header-title-border:                     @global-border;
+@panel-header-title-color:                      @global-heading-color;
+
+@panel-space-padding:                           @global-margin-large;
+
+@panel-divider-gutter:                          @global-grid-gutter;
+@panel-divider-gutter-large:                    @global-grid-gutter-large;
+@panel-divider-border:                          @global-border;
+
+//
+// New
+//
+
+@panel-box-border:                              @global-border;
+@panel-box-border-width:                        @global-border-width;
+@panel-box-primary-box-shadow:                  0 0 20px 0 rgba(51,51,51,0.1);
+
+
+// Sub-object: `uk-panel-title`
+// ========================================================================
+
+.hook-panel-title() {}
+
+
+// Sub-object: `uk-panel-badge`
+// ========================================================================
+
+.hook-panel-badge() {}
+
+
+// Modifier: `uk-panel-box`
+// ========================================================================
+
+.hook-panel-box() {
+
+    &:not(.uk-panel-box-primary):not(.uk-panel-box-secondary) {
+
+        border: @panel-box-border-width solid @panel-box-border;
+
+        .uk-panel-badge {
+            top: @panel-box-badge-top - @panel-box-border-width;
+            right: @panel-box-badge-right - @panel-box-border-width;
+        }
+
+    }
+
+}
+
+.hook-panel-box-hover() {}
+
+//
+// Sub-modifier: `uk-panel-box-primary`
+//
+
+.hook-panel-box-primary() { box-shadow: @panel-box-primary-box-shadow; }
+
+.hook-panel-box-primary-hover() {}
+
+//
+// Sub-modifier: `uk-panel-box-secondary`
+//
+
+.hook-panel-box-secondary() {}
+
+.hook-panel-box-secondary-hover() {}
+
+
+// Modifier: `uk-panel-hover`
+// ========================================================================
+
+.hook-panel-hover() {}
+
+.hook-panel-hover-hover() {}
+
+
+// Modifier: `uk-panel-header`
+// ========================================================================
+
+.hook-panel-header() {}
+
+
+// Miscellaneous
+// ========================================================================
+
+.hook-panel-misc() {}

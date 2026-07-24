@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="icon-switcher_1_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+	 y="0px" width="40px" height="40px" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve">
+<rect x="6" y="14" fill="#D85349" width="12" height="2"/>
+<rect x="6" y="18" fill="#D85349" width="16" height="2"/>
+<rect x="6" y="22" fill="#D85349" width="12" height="2"/>
+<path fill="#D85349" d="M29,3v8h10V3H29z M37,9h-6V5h6V9z"/>
+<path fill="#D85349" d="M29,12v8h10v-8H29z M37,18h-6v-4h6V18z"/>
+<path fill="#D85349" d="M29,21v8h10v-8H29z M37,27h-6v-4h6V27z"/>
+<path fill="#D85349" d="M1,3v32h27V3H1z M3,33V5h23v28H3z"/>
+</svg>

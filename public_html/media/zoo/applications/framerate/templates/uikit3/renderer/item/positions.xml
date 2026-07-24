@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<renderer>
+	<positions layout="submission">
+		<position name="fields">Fields</position>
+		<position name="administration">Administration</position>
+	</positions>
+	<positions layout="edit">
+		<position name="fields">Fields</position>
+		<position name="administration">Administration</position>
+	</positions>
+</renderer>

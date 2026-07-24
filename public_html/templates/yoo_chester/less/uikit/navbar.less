@@ -1,0 +1,116 @@
+// Copyright (C) YOOtheme GmbH, YOOtheme Proprietary Use License (http://www.yootheme.com/license) */
+
+//
+// Component: Navbar
+//
+// ========================================================================
+
+
+// Variables
+// ========================================================================
+
+@navbar-background:                             rgba(0,0,0,0);
+@navbar-color:                                  @global-color;
+@navbar-link-color:                             @global-link-color;
+@navbar-link-hover-color:                       @global-link-hover-color;
+
+@navbar-nav-height:                             70px;
+@navbar-nav-line-height:                        @navbar-nav-height;
+@navbar-nav-padding-horizontal:                 0;
+@navbar-nav-color:                              @global-heading-color;
+@navbar-nav-font-size:                          @global-font-size;
+@navbar-nav-font-family:                        @global-alt-font-family;
+@navbar-nav-hover-background:                   rgba(0,0,0,0);
+@navbar-nav-hover-color:                        @global-link-color;
+@navbar-nav-onclick-background:                 rgba(0,0,0,0);
+@navbar-nav-onclick-color:                      @global-link-hover-color;
+@navbar-nav-active-background:                  rgba(0,0,0,0);
+@navbar-nav-active-color:                       @global-link-color;
+
+@navbar-brand-font-size:                        round((@global-font-size * 1.333)); // 20px
+@navbar-brand-color:                            @global-color;
+@navbar-brand-hover-color:                      @global-color;
+
+@navbar-toggle-font-size:                       round((@global-font-size * 1.2)); // 18px
+@navbar-toggle-color:                           @global-color;
+@navbar-toggle-hover-color:                     @global-color;
+
+//
+// New
+//
+
+@navbar-nav-text-transform:                     @global-text-transform;
+@navbar-nav-margin-horizontal:                  @global-grid-gutter;
+@navbar-attached-box-shadow:                    0 0 20px 0 rgba(51,51,51,0.1);
+@navbar-toggle-icon:                            "\e906";
+@navbar-toggle-icon-font-family:                "Chester";
+
+
+// Component
+// ========================================================================
+
+.hook-navbar() {}
+
+
+// Sub-object: `uk-navbar-nav`
+// ========================================================================
+
+.hook-navbar-nav() {
+
+    text-transform: @navbar-nav-text-transform;
+
+    &:before {
+        content: "";
+        position: absolute;
+        bottom: 17px;
+        left: 0;
+        height: @global-border-width;
+        width: 0;
+        background: fade(@navbar-nav-hover-color, 70%);
+        -webkit-transition: width .4s;
+        transition: width .4s;
+    }
+
+}
+
+// Hover
+.hook-navbar-nav-hover() {
+
+    &:before { width: 100%; }
+
+}
+
+// OnClick
+.hook-navbar-nav-onclick() {}
+
+// Active
+.hook-navbar-nav-active() {
+
+    &:before { width: 100%; }
+
+}
+
+
+// Sub-object: `uk-navbar-content`
+// ========================================================================
+
+.hook-navbar-content() {}
+
+
+// Miscellaneous
+// ========================================================================
+
+.hook-navbar-misc() {
+
+    .uk-navbar-nav > li:not(:last-child),
+    .uk-navbar-brand { margin-right: @navbar-nav-margin-horizontal; }
+
+    .uk-navbar-attached {
+        background: @global-background;
+        box-shadow: @navbar-attached-box-shadow;
+    }
+
+    .uk-navbar-toggle { padding: 0 @global-grid-gutter; }
+    .uk-navbar-toggle:after { font-family: @navbar-toggle-icon-font-family; }
+
+}

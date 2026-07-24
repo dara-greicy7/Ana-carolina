@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<application>
+	<name>Tech Space</name>
+	<group>tech-space</group>
+	<version>4.0.8</version>
+	<creationDate>November 2020</creationDate>
+	<author>YOOtheme</author>
+	<authorEmail>info@yootheme.com</authorEmail>
+	<authorUrl>https://yootheme.com</authorUrl>
+    <copyright><![CDATA[
+			YOOtheme GmbH, <a href="https://yootheme.com/terms" target="_blank">Terms of Service</a>
+			]]> </copyright>
+    <license>GNU General Public License (GPL)
+	</license>
+	<description><![CDATA[
+				<div style="max-width: 550px;">The Tech Space app is built to work smoothly with <a href="https://yootheme.com/page-builder" target="_blank">YOOtheme Pro</a>. This app does not include any templates and needs to be templated with the YOOtheme Pro page builder. It inherits the content structure from the <a href="https://yootheme.com/joomla-templates/tech-space" target="_blank">Tech Space theme package</a>. Its layouts and styles can be found in the YOOtheme Pro libraries.</div>
+				]]>
+	</description>
+	<params group="application-config">
+		<param name="items_per_page" type="text" size="3" default="15" label="Items Per Page" description="Number of items to show on a page" />
+		<param name="include_subcategories" type="radio" default="1" label="Include Subcategories" description="Include items from subcategories">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="item_order" type="zooitemorder" default="_itemname" label="Item Order" description="ITEM_ORDER" />
+		<param name="show_feed_link" type="zoofeed" default="0" label="Show Feed Link" description="DISPLAY_FEED_LINKS" />
+	</params>
+	<params group="category-config">
+		<param name="items_per_page" type="textglobal" size="3" default="15" label="Items Per Page" description="Number of items to show on a page" />
+		<param name="include_subcategories" type="radio" default="1" label="Include Subcategories" description="Include items from subcategories">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="item_order" type="zooitemorderglobal" default="_itemname" label="Item Order" description="ITEM_ORDER" />
+		<param name="show_feed_link" type="zoofeedglobal" default="0" label="Show Feed Link" description="DISPLAY_FEED_LINKS" />
+	</params>
+	<params group="application-content">
+	</params>
+	<params group="category-content">
+		<param name="image" type="zooimage" label="Image" />
+		<param name="image_alt" type="text" label="Image Alt Text" />
+        <param name="image_text_color" type="list" default="" label="Image Text Color">
+            <option value="">None</option>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+        </param>
+		<param name="intro_image" type="zooimage" label="Intro Image" />
+		<param name="intro_image_alt" type="text" label="Intro Image Alt Text" />
+		<param name="intro_image_large" type="zooimage" label="Intro Image Large" />
+		<param name="intro_image_large_alt" type="text" label="Intro Image Large Alt Text" />
+		<param name="teaser_title" type="text" label="Teaser Title" />
+		<param name="teaser_image_top_bg" type="zooimage" label="Teaser Image Top BG" />
+		<param name="teaser_image_top_bg_alt" type="text" label="Teaser Image Top BG Alt Text" />
+		<param name="teaser_image_left_bg" type="zooimage" label="Teaser Image Left BG" />
+		<param name="teaser_image_left_bg_alt" type="text" label="Teaser Image Left BG Alt Text" />
+		<param name="teaser_image_right_bg" type="zooimage" label="Teaser Image Right BG" />
+		<param name="teaser_image_right_bg_alt" type="text" label="Teaser Image Right BG Alt Text" />
+		<param name="teaser_image_bottom_bg" type="zooimage" label="Teaser Image Bottom BG" />
+		<param name="teaser_image_bottom_bg_alt" type="text" label="Teaser Image Bottom BG Alt Text" />
+        <param name="teaser_image_bg_text_color" type="list" default="" label="Teaser Image BG Text Color">
+            <option value="">None</option>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+        </param>
+	</params>
+	<params group="item-content">
+	</params>
+</application>

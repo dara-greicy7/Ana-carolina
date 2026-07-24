@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout name="mapping">
+		<name>Mapping</name>
+		<description>This is the default mapping for the Widgetkit 2 content.</description>
+	</layout>
+	<layout name="mapping2">
+		<name>Mapping 2</name>
+		<description>This is an alternative mapping for the Widgetkit 2 content.</description>
+	</layout>
+	<layout name="mapping3">
+		<name>Mapping 3</name>
+		<description>This is an alternative mapping for the Widgetkit 2 content.</description>
+	</layout>
+</metadata>

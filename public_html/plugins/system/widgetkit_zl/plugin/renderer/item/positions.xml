@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<renderer>
+	<positions layout="mapping">
+		<position name="title">title</position>
+		<position name="content">content</position>
+		<position name="media">media</position>
+		<position name="media2">media2</position>
+		<position name="location">location</position>
+		<position name="link">link</position>
+		<position name="author">author</position>
+		<position name="date">date</position>
+		<position name="categories">categories</position>
+		<position name="tags">tags</position>
+		<position name="custom1">custom 1</position>
+		<position name="custom2">custom 2</position>
+		<position name="custom3">custom 3</position>
+		<position name="custom4">custom 4</position>
+		<position name="custom5">custom 5</position>
+	</positions>
+	<positions layout="mapping2">
+		<position name="title">title</position>
+		<position name="content">content</position>
+		<position name="media">media</position>
+		<position name="media2">media2</position>
+		<position name="location">location</position>
+		<position name="link">link</position>
+		<position name="author">author</position>
+		<position name="date">date</position>
+		<position name="categories">categories</position>
+		<position name="tags">tags</position>
+		<position name="custom1">custom 1</position>
+		<position name="custom2">custom 2</position>
+		<position name="custom3">custom 3</position>
+		<position name="custom4">custom 4</position>
+		<position name="custom5">custom 5</position>
+	</positions>
+	<positions layout="mapping3">
+		<position name="title">title</position>
+		<position name="content">content</position>
+		<position name="media">media</position>
+		<position name="media2">media2</position>
+		<position name="location">location</position>
+		<position name="link">link</position>
+		<position name="author">author</position>
+		<position name="date">date</position>
+		<position name="categories">categories</position>
+		<position name="tags">tags</position>
+		<position name="custom1">custom 1</position>
+		<position name="custom2">custom 2</position>
+		<position name="custom3">custom 3</position>
+		<position name="custom4">custom 4</position>
+		<position name="custom5">custom 5</position>
+	</positions>
+</renderer>

@@ -1,0 +1,36 @@
+{
+  "private": true,
+  "name": "zlux",
+  "version": "2.0.4",
+  "description": "ZOOlanders UX framework",
+  "copyright": "Copyright (C) Joolanders, SL",
+  "license": "GNU General Public License v2 or later",
+  "authors": [
+    {
+      "name": "ZOOlanders",
+      "email": "info@zoolanders.com",
+      "homepage": "http://zoolanders.com"
+    }
+  ],
+  "devDependencies": {
+    "date-utils": "^1.2.18",
+    "del": "^0.1.3",
+    "gulp": "^3.8.8",
+    "gulp-concat": "^2.3.4",
+    "gulp-header": "^1.2.2",
+    "gulp-jshint": "^1.9.2",
+    "gulp-less": "^1.3.6",
+    "gulp-minify-css": "^0.3.10",
+    "gulp-rename": "^1.2.0",
+    "gulp-replace": "^0.5.0",
+    "gulp-uglify": "^1.0.1",
+    "gulp-util": "^3.0.1",
+    "merge-stream": "^0.1.6",
+    "run-sequence": "^0.3.7"
+  },
+  "devflow": {
+    "symlinks": {
+	  "": "media/com_zoolanders/vendor/zlux"
+    }
+  }
+}

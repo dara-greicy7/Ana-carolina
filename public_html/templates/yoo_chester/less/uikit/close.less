@@ -1,0 +1,60 @@
+// Copyright (C) YOOtheme GmbH, YOOtheme Proprietary Use License (http://www.yootheme.com/license) */
+
+//
+// Component: Close
+//
+// ========================================================================
+
+@close-alt-background:          @global-background;
+
+//
+// New
+//
+
+@close-font-family:             'Chester';
+@close-icon:                    "\e900";
+@close-line-height:             24px;
+@close-alt-line-height:         @close-size;
+@close-opacity:                 1;
+@close-hover-opacity:           0.7;
+
+
+// Component
+// ========================================================================
+
+.hook-close() {
+
+    line-height: @close-line-height;
+    opacity: @close-opacity;
+
+    &:after {
+        content: @close-icon !important;
+        font-family: @close-font-family !important;
+        font-size: 14px;
+    }
+
+    &:not(.uk-close-alt):hover,
+    &:not(.uk-close-alt):focus { opacity: @close-hover-opacity !important; }
+
+}
+
+
+// Modifier: `uk-close-alt`
+// ========================================================================
+
+.hook-close-alt() {
+
+    line-height: @close-alt-line-height;
+
+    &:after { opacity: @close-opacity !important; }
+
+    &:hover:after,
+    &:focus:after { opacity: @close-hover-opacity !important; }
+
+}
+
+
+// Miscellaneous
+// ========================================================================
+
+.hook-close-misc() {}

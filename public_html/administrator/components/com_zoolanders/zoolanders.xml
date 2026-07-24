@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="2.5" method="upgrade">
+	<name>ZOOlanders</name>
+	<version>3.3.26</version>
+    <creationDate>August 2017</creationDate>
+    <copyright>Copyright (C) Joolanders, SL</copyright>
+    <license>GNU General Public License v2 or later</license>
+    <author>ZOOlanders</author>
+    <authorEmail>info@zoolanders.com</authorEmail>
+    <authorUrl>http://zoolanders.com</authorUrl>
+	<description>COM_ZOOLANDERS_SYS_DESCRIPTION</description>
+	<scriptfile>install.script.php</scriptfile>
+
+	<!-- Site Files -->
+	<files folder="site">
+		<filename>router.php</filename>
+		<filename>zoolanders.php</filename>
+		<folder>views</folder>
+	</files>
+
+	<!-- Media files -->
+	<media destination="com_zoolanders" folder="media">
+		<folder>apps</folder>
+		<folder>css</folder>
+		<folder>img</folder>
+		<folder>vendor</folder>
+		<folder>fonts</folder>
+	</media>
+
+	<!-- Back-end section -->
+	<administration>
+
+		<!-- Menu -->
+		<menu view="dashboard" img="../media/com_zoolanders/img/zoolanders-16.png">COM_ZOOLANDERS</menu>
+
+		<!-- Files -->
+		<files folder="admin">
+			<filename>CHANGELOG.md</filename>
+			<filename>zoolanders.php</filename>
+			<filename>access.xml</filename>
+			<filename>config.xml</filename>
+			<folder>controllers</folder>
+			<folder>views</folder>
+			<folder>partials</folder>
+			<folder>helpers</folder>
+		</files>
+
+		<!-- Translation files -->
+		<languages folder="admin">
+			<language tag="en-GB">language/en-GB/en-GB.com_zoolanders.sys.ini</language>
+		</languages>
+
+	</administration>
+</extension>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<application>
+	<name>Blog</name>
+	<group>blog</group>
+	<version>4.0.8</version>
+	<creationDate>August 2011</creationDate>
+	<author>YOOtheme</author>
+	<authorEmail>info@yootheme.com</authorEmail>
+	<authorUrl>https://yootheme.com</authorUrl>
+    <copyright>Copyright (C) YOOtheme GmbH</copyright>
+    <license><![CDATA[
+			https://www.gnu.org/licenses/gpl.html GNU/GPL
+			]]>
+	</license>
+	<description><![CDATA[
+				This is the blog app for ZOO developed by YOOtheme.
+				<br /><strong>NOTE:</strong> The icon of this app is copyrighted by YOOtheme. Re-use is strictly prohibited.
+				]]>
+	</description>
+	<params group="application-config">
+		<param name="items_per_page" type="text" size="3" default="15" label="Items Per Page" description="Number of items to show on a page"/>
+		<param name="include_subcategories" type="radio" default="0" label="Include Subcategories" description="Include items from subcategories">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="item_order" type="zooitemorder" default="_itemname" label="Item Order" description="ITEM_ORDER"/>
+		<param name="show_feed_link" type="zoofeed" default="1" label="Show Feed Link" description="DISPLAY_FEED_LINKS"/>
+	<param name="name_translation" type="zoocategorylang" size="3" default="15" label="Name Translation" description="Application name in other languages"/><param name="alias_translation" type="zoocategorylang" size="3" default="15" label="Alias Translation" description="Alias in other languages"/></params>
+	<params group="category-config">
+		<param name="items_per_page" type="textglobal" size="3" default="15" label="Items Per Page" description="Number of items to show on a page"/>
+		<param name="include_subcategories" type="radioglobal" default="0" label="Include Subcategories" description="Include items from subcategories">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="item_order" type="zooitemorderglobal" default="_itemname" label="Item Order" description="ITEM_ORDER"/>
+		<param name="show_feed_link" type="zoofeedglobal" default="1" label="Show Feed Link" description="DISPLAY_FEED_LINKS"/>
+	</params>
+	<params group="application-content">
+		<param name="title" type="text" label="Title" description="Set a frontpage title."/>
+		<param name="subtitle" type="text" label="Subtitle" description="Set a subtitle."/>
+		<param name="image" type="zooimage" label="Image" description="Choose a frontpage image."/>
+	<param name="title_translation" type="zoocategorylang" label="Title Translation" description="Set a frontpage title."/><param name="alias_translation" type="zoocategorylang" size="3" default="15" label="Alias Translation" description="Alias in other languages"/><param name="subtitle_translation" type="zoocategorylang" label="Subtitle Translation" description="Set a subtitle."/><param name="desc_translation" type="zoocategorylangtextarea" label="Description Translation" description="Set a Description."/><param name="image_translation" type="zooimagelang" label="Image Translation" description="Choose a frontpage image."/><param name="items_title_translation" type="zoocategorylang" label="Items Titles Translation" description="Set a title above the displayed items."/><param name="categories_title_translation" type="zoocategorylang" label="Categories Translation" description="Set a title above the displayed sub categories."/></params>
+	<params group="category-content">
+		<param name="subtitle" type="text" label="Sub Headline" description="Set a subtitle."/>
+		<param name="image" type="zooimage" label="Image" description="Choose a category image."/>
+		<param name="related_items" type="zoorelateditems" label="Related Items" description="Choose related items." type_filter="author,article"/>
+	<param name="name_translation" type="zoocategorylang" size="3" default="15" label="Name Translation" description="Category name in other languages"/><param name="alias_translation" type="zoocategorylang" size="3" default="15" label="Alias Translation" description="Alias in other languages"/><param name="teaser_image_translation" type="zooimagelang" size="3" default="15" label="Teaser Image Translation" description="Image in other languages"/><param name="image_translation" type="zooimagelang" size="3" default="15" label="Image Translation" description="Image in other languages"/><param name="teaser_desc_translation" type="zoocategorylangtextarea" size="3" default="15" label="Teaser Description Translation" description="Category Teaser Description in other languages"/><param name="desc_translation" type="zoocategorylangtextarea" size="3" default="15" label="Description Translation" description="Category Description in other languages"/><param name="cat_title_translation" type="zoocategorylang" size="3" default="15" label="Categories Title Translation" description="Categories Title in other languages"/><param name="item_title_translation" type="zoocategorylang" size="3" default="15" label="Items Title Translation" description="Items title in other languages"/><param name="sub_headline_translation" type="zoocategorylang" size="3" default="15" label="Sub Headline Translation" description="Sub Headline title in other languages"/><param name="@spacer" type="spacer" default="&lt;b&gt;Meta Data&lt;/b&gt;"/><param name="meta_title_translation" type="zoocategorylang" size="3" default="15" label="Meta Title Translation" description="Meta Title in other languages"/><param name="meta_description_translation" type="zoocategorylangtextarea" size="3" default="15" label="Meta Description Translation" description="Meta Description in other languages"/><param name="meta_keywords_translation" type="zoocategorylangtextarea" size="3" default="15" label="Meta Keywords Translation" description="Meta Keywords in other languages"/></params>
+	<params group="item-content">
+	<param name="name_translation" type="zoocategorylang" size="3" default="15" label="Name Translation" description="Item name in other languages"/><param name="alias_translation" type="zoocategorylang" size="3" default="15" label="Alias Translation" description="Alias in other languages"/><param name="metatitle_translation" type="zoocategorylang" size="3" label="Meta Title Translation" description="Meta Title in other languages"/><param name="metadesc_translation" type="zoocategorylangtextarea" size="3" default="15" label="Meta Description Translation" description="Meta Description in other languages"/><param name="metakeywords_translation" type="zoocategorylangtextarea" size="3" default="15" label="Meta Keywords Translation" description="Meta Keywords in other languages"/></params>
+<params group="submission-config">
+			<param name="name_translation" type="zoocategorylang" size="3" default="15" label="Name Translation" description="Item name in other languages"/>
+			<param name="alias_translation" type="zoocategorylang" size="3" default="15" label="Alias Translation" description="Alias in other languages"/>
+			<param name="metadesc_translation" type="zoocategorylangtextarea" size="3" default="15" label="Meta Description Translation" description="Meta Description in other languages"/>
+			<param name="metakeywords_translation" type="zoocategorylangtextarea" size="3" default="15" label="Meta Keywords Translation" description="Meta Keywords in other languages"/>
+		</params></application>

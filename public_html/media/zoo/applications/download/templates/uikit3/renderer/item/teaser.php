@@ -1,0 +1,47 @@
+<?php
+/**
+ * @package   com_zoo
+ * @author    YOOtheme https://yootheme.com
+ * @copyright Copyright (C) YOOtheme GmbH
+ * @license   https://www.gnu.org/licenses/gpl.html GNU/GPL
+ */
+
+
+// no direct access
+defined('_JEXEC') or die('Restricted access');
+
+?>
+
+<?php if ($this->checkPosition('media')) : ?>
+<div class="<?php echo 'uk-align-'.$view->params->get('template.items_media_alignment').($view->params->get('template.items_media_alignment') == "left" || $view->params->get('template.items_media_alignment') == "right" ? '@m' : ''); ?>">
+	<?php echo $this->renderPosition('media'); ?>
+</div>
+<?php endif; ?>
+
+<div class="uk-overflow-hidden">
+
+<?php if ($this->checkPosition('title')) : ?>
+<h2 class="uk-card-title uk-margin-remove">
+    <?php echo $this->renderPosition('title'); ?>
+</h2>
+<?php endif; ?>
+
+<?php if ($this->checkPosition('meta')) : ?>
+<p class="uk-text-muted uk-margin-remove">
+	<?php echo $this->renderPosition('meta'); ?>
+</p>
+<?php endif; ?>
+
+<?php if ($this->checkPosition('specification')) : ?>
+<ul class="uk-list">
+	<?php echo $this->renderPosition('specification', array('style' => 'uikit_list')); ?>
+</ul>
+<?php endif; ?>
+
+<?php if ($this->checkPosition('button')) : ?>
+<div class="uk-margin">
+    <?php echo $this->renderPosition('button'); ?>
+</div>
+<?php endif; ?>
+
+</div>

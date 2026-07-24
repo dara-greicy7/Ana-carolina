@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="icon-slider" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+	 y="0px" width="40px" height="40px" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve">
+<path fill="#D85349" d="M1,3.08v2h2v28H1v2h4v-32H1L1,3.08z"/>
+<path fill="#D85349" d="M11,3v32h18V3H11z M13,33V5h14v28H13z"/>
+<path fill="#D85349" d="M39,5V3h-4v32h4v-2h-2V5H39z"/>
+</svg>

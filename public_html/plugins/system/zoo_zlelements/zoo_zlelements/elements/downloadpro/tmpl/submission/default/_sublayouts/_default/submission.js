@@ -1,0 +1,8 @@
+/**
+ * @package     ZL Elements
+ * @version     3.3.0
+ * @author      ZOOlanders - http://zoolanders.com
+ * @license     GNU General Public License v2 or later
+ */
+
+!function(i){var e=function(){};e.prototype=i.extend(e.prototype,{name:"DownloadProSubmissionDefault",options:{},initialize:function(e,a){this.options=i.extend({},this.options,a);var n=this;n.element=e,i("p.add a",e).on("click",function(){n.apply(e.find('[type="file"]'))}),n.apply(e.find('[type="file"]'))},apply:function(e){var a=this;e.each(function(){var e=i(this),n=e.closest(".download-element"),t=n.find("input.upload"),o=n.find("input.file");i(this).data("initialized")||(i('[type="file"]',n).on("change",function(){var e=i(this).val().replace(/^.*[\/\\]/g,"");n.find("input.filename").val(e)}),i("span.download-cancel",n).on("click",function(){t.val(""),o.val(""),a.sanatize(n,t,o)}),a.sanatize(n,t,o),i(this).data("initialized",!0))}),a.element.data("initialized",!0)},sanatize:function(i,e,a){var n=this;e.val()&&!n.element.data("initialized")&&1==e.data("exist")?(i.find("div.download-select").addClass("hidden"),i.find("div.download-preview").removeClass("hidden")):(e.val(""),a.val(""),i.find("div.download-select").removeClass("hidden"),i.find("div.download-preview").addClass("hidden"))}}),i.fn[e.prototype.name]=function(){var a=arguments,n=a[0]?a[0]:null;return this.each(function(){var t=i(this);if(e.prototype[n]&&t.data(e.prototype.name)&&"initialize"!=n)t.data(e.prototype.name)[n].apply(t.data(e.prototype.name),Array.prototype.slice.call(a,1));else if(!n||i.isPlainObject(n)){var o=new e;e.prototype.initialize&&o.initialize.apply(o,i.merge([t],a)),t.data(e.prototype.name,o)}else i.error("Method "+n+" does not exist on jQuery."+e.name)})}}(jQuery);

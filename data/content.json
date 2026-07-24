@@ -1,0 +1,135 @@
+{
+  "secciones": [
+    {
+      "id": "1",
+      "type": "secciones",
+      "title": "About me",
+      "alias": "about-me",
+      "content": "\tMy History\nI help organizations execute events that result in company growth.\n\nWhen I was a child, I wanted to be an architect or interior designer…little did I know that I would be designing meetings and events instead. My love for people and travel, combined with my passion for serving others, made the hospitality industry appealing. At the time, I did not know that a career in corporate events was possible until I left the hotel and started working at a travel agency, planning incentive trips and conferences all over the world. That is when I realized that event planning had many design elements.\n\nBesides my positivity and work ethic, if I had to look back at what has made me the most successful thus far, I would have to say that listening and being solutions-driven are the two skills that stand out. My ability to truly listen to others' needs and cater to those needs made me a natural in this industry.\n\nAs a leader, I am kind with a mix of coaching, democratic, and visionary style and always with a purpose in mind. I work well independently and in collaboration with others. Knowing that we can all learn from each other, I am always open to new ideas. Finding meaning in everything that I do, I put intentionality into my work. I am picky and a perfectionist; therefore, I pay attention to details and look for innovation. I thrive in a fast-paced environment; I am culturally minded, adapt quickly, and maintain composure under pressure, managing different stakeholders' expectations while ensuring excellence.\n\nTo learn is to grow! As a Certified Meeting Professional, I enjoy the entire process of Program Management from design to execution. I am constantly learning to expand my skill set. Currently, I am enrolled in a Meetings & Event Management Master's program with expected graduation in 2022. Looking ahead, I look forward to expanding my career while making a difference in everything I do.\n\nWe help small businesses, non-profits, and individuals create memorable travel experiences and events through an immersive lens. \n\n\n\n\n\t\n\t\n\t\tValues\n\t\tAuthenticity, Compassion, Courage, Kindness, Adventure, Empathy, Pride, Reliability, Transparency.\n\t\t\n\t\n\t\n\t\n\t\tMission Statement\n\t\tTake our customers on a discovery journey, nurturing their special interests and enabling relationships that result in transformative experiences.\n\t\t\n\t\n\t\n\t\n\t\tVision Statement\n\t\tIgnite people's transformation through travel and immersive experiences.\n\t\t\n\t\n\n\n\n\n\n\n",
+      "image": "/images/legacy/secciones/nosotros/about.jpeg"
+    },
+    {
+      "id": "8",
+      "type": "secciones",
+      "title": "Contactos",
+      "alias": "contactos",
+      "content": "\n\t\n\t\tCotización & Reservación\n\t\tComplete las informaciones requeridas para obtener una cotización y reservar.........................\n\t\tTambién puede enviarnos sus preguntas y con gusto le responderemos sobre nuestros servicios.\n\t\t\n\t\tFollow us\n\t\t\n\t\t\t\n\t\t\t\n\t\t\t\n\t\t\t\n\t\t\n\t\n\t\n\t\t\n\t\t\n\t\t\t\n\t\t\t\n\t\t\t\n\t\t\t\n\t\t\n\t\t\t\n\t\t\t\n\t\t\tSend \n\t\t\n\t\n",
+      "image": ""
+    },
+    {
+      "id": "70",
+      "type": "secciones",
+      "title": "Mensaje no Enviado",
+      "alias": "mensaje-no-enviado",
+      "content": "\n                  \n                    \n                      \n                      \n                      \n                        \n                        \n                      \n                    \n                    \n                    No Enviado\n                    Ha ocurrido un error por favor inténtelo de nuevo.\n                    Volver Atras\n                  ",
+      "image": ""
+    },
+    {
+      "id": "71",
+      "type": "secciones",
+      "title": "Mensaje Enviado",
+      "alias": "mensaje-enviado",
+      "content": "\n  \n    \n      \n      \n      \n        \n    \n  \n\n\n      Gracias por Contactarnos\n      Estaremos comunicándonos con usted lo más pronto posible.\n      Volver al Inicio\n",
+      "image": ""
+    }
+  ],
+  "servicios": [
+    {
+      "id": "82",
+      "type": "servicios",
+      "title": "Destination and venue sourcing",
+      "alias": "destination-and-venue-sourcing",
+      "content": "Lorem ipsum dolor, sit amet consectetur, adipisicing elit. Eius vitae dicta, officiis nobis ad rem, nemo explicabo accusamus ex? Recusandae nulla delectus, possimus tenetur consequuntur voluptas, a repellat harum praesentium.\n\nPorro, explicabo voluptatum commodi doloribus dicta quos voluptatem sint amet hic autem neque quam nisi non tenetur dolores nam molestiae eos aut, ipsa nulla incidunt maxime? Autem illum dolor eius!\n\nBeatae repellendus odit eligendi optio rerum ducimus quia tempore quidem dolorem consectetur molestiae ut ad, quam quaerat? Iste provident temporibus veniam rem, sequi dolor iure quasi asperiores exercitationem consequuntur natus.\n\nAdipisci aperiam, omnis. Alias odit animi soluta nesciunt veniam aliquid, veritatis necessitatibus iure qui error consequatur minus! Obcaecati, molestias. Eos nesciunt tempore asperiores sint, pariatur quos laboriosam doloribus. Ipsum, neque!\n\nIncidunt animi nam, neque ipsam eos reiciendis, aut facilis est illo nisi repellat pariatur alias ad, sapiente repellendus deleniti, excepturi. Ut, provident consectetur natus eum voluptate laboriosam quaerat, maiores non.",
+      "image": "/images/legacy/servicios/prueba.jpg"
+    },
+    {
+      "id": "83",
+      "type": "servicios",
+      "title": "Event and meeting design",
+      "alias": "event-and-meeting-design",
+      "content": "Lorem ipsum dolor, sit amet consectetur, adipisicing elit. Eius vitae dicta, officiis nobis ad rem, nemo explicabo accusamus ex? Recusandae nulla delectus, possimus tenetur consequuntur voluptas, a repellat harum praesentium.\n\nPorro, explicabo voluptatum commodi doloribus dicta quos voluptatem sint amet hic autem neque quam nisi non tenetur dolores nam molestiae eos aut, ipsa nulla incidunt maxime? Autem illum dolor eius!\n\nBeatae repellendus odit eligendi optio rerum ducimus quia tempore quidem dolorem consectetur molestiae ut ad, quam quaerat? Iste provident temporibus veniam rem, sequi dolor iure quasi asperiores exercitationem consequuntur natus.\n\nAdipisci aperiam, omnis. Alias odit animi soluta nesciunt veniam aliquid, veritatis necessitatibus iure qui error consequatur minus! Obcaecati, molestias. Eos nesciunt tempore asperiores sint, pariatur quos laboriosam doloribus. Ipsum, neque!\n\nIncidunt animi nam, neque ipsam eos reiciendis, aut facilis est illo nisi repellat pariatur alias ad, sapiente repellendus deleniti, excepturi. Ut, provident consectetur natus eum voluptate laboriosam quaerat, maiores non.",
+      "image": "/images/legacy/servicios/event.jpg"
+    },
+    {
+      "id": "85",
+      "type": "servicios",
+      "title": "Travel consultancy",
+      "alias": "travel-consultancy",
+      "content": "Lorem ipsum dolor, sit amet consectetur, adipisicing elit. Eius vitae dicta, officiis nobis ad rem, nemo explicabo accusamus ex? Recusandae nulla delectus, possimus tenetur consequuntur voluptas, a repellat harum praesentium.\n\nPorro, explicabo voluptatum commodi doloribus dicta quos voluptatem sint amet hic autem neque quam nisi non tenetur dolores nam molestiae eos aut, ipsa nulla incidunt maxime? Autem illum dolor eius!\n\nBeatae repellendus odit eligendi optio rerum ducimus quia tempore quidem dolorem consectetur molestiae ut ad, quam quaerat? Iste provident temporibus veniam rem, sequi dolor iure quasi asperiores exercitationem consequuntur natus.\n\nAdipisci aperiam, omnis. Alias odit animi soluta nesciunt veniam aliquid, veritatis necessitatibus iure qui error consequatur minus! Obcaecati, molestias. Eos nesciunt tempore asperiores sint, pariatur quos laboriosam doloribus. Ipsum, neque!\n\nIncidunt animi nam, neque ipsam eos reiciendis, aut facilis est illo nisi repellat pariatur alias ad, sapiente repellendus deleniti, excepturi. Ut, provident consectetur natus eum voluptate laboriosam quaerat, maiores non.",
+      "image": "/images/legacy/servicios/Trabajar-viajando.jpeg"
+    },
+    {
+      "id": "84",
+      "type": "servicios",
+      "title": "Incentive programs",
+      "alias": "incentive-programs",
+      "content": "Lorem ipsum dolor, sit amet consectetur, adipisicing elit. Eius vitae dicta, officiis nobis ad rem, nemo explicabo accusamus ex? Recusandae nulla delectus, possimus tenetur consequuntur voluptas, a repellat harum praesentium.\n\nPorro, explicabo voluptatum commodi doloribus dicta quos voluptatem sint amet hic autem neque quam nisi non tenetur dolores nam molestiae eos aut, ipsa nulla incidunt maxime? Autem illum dolor eius!\n\nBeatae repellendus odit eligendi optio rerum ducimus quia tempore quidem dolorem consectetur molestiae ut ad, quam quaerat? Iste provident temporibus veniam rem, sequi dolor iure quasi asperiores exercitationem consequuntur natus.\n\nAdipisci aperiam, omnis. Alias odit animi soluta nesciunt veniam aliquid, veritatis necessitatibus iure qui error consequatur minus! Obcaecati, molestias. Eos nesciunt tempore asperiores sint, pariatur quos laboriosam doloribus. Ipsum, neque!\n\nIncidunt animi nam, neque ipsam eos reiciendis, aut facilis est illo nisi repellat pariatur alias ad, sapiente repellendus deleniti, excepturi. Ut, provident consectetur natus eum voluptate laboriosam quaerat, maiores non.",
+      "image": "/images/legacy/servicios/program.jpg"
+    }
+  ],
+  "media": [
+    {
+      "id": "86",
+      "type": "media",
+      "title": "Sao Paulo",
+      "alias": "sao-paulo",
+      "content": "",
+      "image": "/images/legacy/gallery/sao-paulo/01.jpg",
+      "galleryPath": "/images/legacy/gallery"
+    },
+    {
+      "id": "87",
+      "type": "media",
+      "title": "Rio de Janeiro",
+      "alias": "rio-de-janeiro",
+      "content": "",
+      "image": "/images/legacy/gallery/rio-de-janeiro/01.jpg",
+      "galleryPath": "/images/legacy/gallery"
+    },
+    {
+      "id": "88",
+      "type": "media",
+      "title": "Dominican Republic",
+      "alias": "repblica-dominicana",
+      "content": "",
+      "image": "/images/legacy/gallery/republica-dominicana/01.jpg",
+      "galleryPath": "/images/legacy/gallery"
+    }
+  ],
+  "slideshow": [
+    {
+      "id": "81",
+      "type": "slideshow",
+      "title": "The Joy Of Travel",
+      "alias": "the-joy-of-travel",
+      "content": "",
+      "image": "/images/legacy/slideshow/slideshow-home/the-joy-of-travel.jpg"
+    }
+  ],
+  "blog": [
+    {
+      "id": "90",
+      "type": "blog",
+      "title": "Laguna Dudú, el edén de Cabrera",
+      "alias": "laguna-dud-el-edn-de-cabrera",
+      "content": "\n\t\t\t\t\t\t\tEs un paraíso y no está escondido. Está a la vista de todos en Cabrera. Laguna Dudú es sinónimo de aventura. Te colocas tu traje de baño y una ropa cómoda y te preparas para la acción.\nEl lago no tiene profundidad, por eso el salvavidas no puede faltar. Así inicia todo: te cuelgas de una soga que un instructor está agarrando y que según vaya empujándote irá subiendo hasta que llega al punto en el que escuchas un pito como señal de preparación y caes al agua.\n\nLa adrenalina que se siente va más allá de las típicas maripositas en el estómago. La mejor sensación en cuando sales de allí sabiendo que estás vivo, sobre todo si no sabes nadar. Ahí, te sientes feliz de haberte tirado y explorado las aguas manantiales de la Laguna Dudú, lo que para mí sería el edén de Cabrera.\nGerge Martínez Rodríguez, administrador del lugar, comentó que los fines de semana, sobre todo los domingo, aproximadamente 800 personas visitan el espacio.\t\t\t\t\t\t",
+      "image": "/images/legacy/blog/blog-test/dudu.jpg"
+    },
+    {
+      "id": "89",
+      "type": "blog",
+      "title": "Saltos de Jima",
+      "alias": "saltos-de-jima",
+      "content": "Visita las preciosas cascadas y piscinas naturales de los Saltos de Jima y descubre el apasionante paisaje de la zona.\nA las afueras de la ciudad de Bonao encontramos el río Jima, famoso por el monumento natural de los Saltos de Jima. El río Jima nace en la reserva científica Las Neblinas y desemboca en el río Camú, y es entre estos dos puntos entre los que encontramos las impresionantes cascadas de los Saltos de Jima.\n",
+      "image": "/images/legacy/blog/blog-test/salto-de-jima.jpg"
+    },
+    {
+      "id": "91",
+      "type": "blog",
+      "title": "Ojos indígena, hermosura de Punta Cana",
+      "alias": "ojos-indgena-hermosura-de-punta-cana",
+      "content": "The “Ojos Indígenas” Ecological Park and Reserve is a 1,500-acre private reserve owned and maintained by the Grupo Puntacana Foundation. The Park and Reserve are set aside for scientific research, conservation of native and endangered species, and recreational activities of our guests.\n\nThe Ecological Reserve is comprised of a network of trails that lead to 12 freshwater lagoons and provides habitat for an abundance of birds, reptiles, insects, and other local flora and fauna.\n\nThe Ecological Park is an interpretive trail that features distinct attractions related to the natural and cultural history of the island, including an iguana habitat, petting zoo, sugarcane exhibition and a fruit tree garden.",
+      "image": "/images/legacy/blog/blog-test/ojos-indigena.jpg"
+    }
+  ]
+}

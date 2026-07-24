@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+	<name>UIkit 3</name>
+	<version>3.1.0</version>
+	<creationDate>August 2013</creationDate>
+	<author>YOOtheme</author>
+	<authorEmail>info@yootheme.com</authorEmail>
+	<authorUrl>https://yootheme.com</authorUrl>
+    <copyright>Copyright (C) YOOtheme GmbH</copyright>
+    <license></license>
+	<description>UIkit template for the Framerate App</description>
+</template>

@@ -1,0 +1,83 @@
+// Copyright (C) YOOtheme GmbH, YOOtheme Proprietary Use License (http://www.yootheme.com/license) */
+
+//
+// Component: Subnav
+//
+// ========================================================================
+
+
+// Variables
+// ========================================================================
+
+@subnav-margin-horizontal:                      25px;
+@subnav-margin-vertical:                        10px;
+
+@subnav-color:                                  @global-muted-color;
+@subnav-hover-color:                            @global-color;
+@subnav-active-color:                           @global-color;
+
+@subnav-line-border:                            @global-border;
+
+@subnav-pill-hover-background:                  @global-muted-background;
+@subnav-pill-hover-color:                       @global-color;
+@subnav-pill-active-background:                 @global-primary-background;
+@subnav-pill-active-color:                      @global-contrast-color;
+
+@subnav-disabled-color:                         lighten(@global-muted-color, 15%);
+
+//
+// New
+//
+
+@subnav-font-family:                            @global-alt-font-family;
+@subnav-font-size:                              14px;
+@subnav-text-transform:                         @global-text-transform;
+@subnav-line-margin-horizontal:                 10px;
+
+
+// Component
+// ========================================================================
+
+.hook-subnav() {
+    font-family: @subnav-font-family;
+    font-size: @subnav-font-size;
+    text-transform: @subnav-text-transform;
+}
+
+.hook-subnav-hover() {}
+
+.hook-subnav-active() {}
+
+
+// Modifier: `uk-subnav-line'
+// ========================================================================
+
+.hook-subnav-line-divider() {}
+
+
+// Modifier: `uk-subnav-pill'
+// ========================================================================
+
+.hook-subnav-pill() {}
+
+.hook-subnav-pill-hover() {}
+
+.hook-subnav-pill-active() {}
+
+
+// Disabled state
+// ========================================================================
+
+.hook-subnav-disabled() {}
+
+
+// Miscellaneous
+// ========================================================================
+
+.hook-subnav-misc() {
+
+    .uk-subnav-line { margin-left: -@subnav-line-margin-horizontal; }
+    .uk-subnav-line > * { padding-left: @subnav-line-margin-horizontal; }
+    .uk-subnav-line > :nth-child(n+2):before { margin-right: @subnav-line-margin-horizontal; }
+
+}

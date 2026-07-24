@@ -1,0 +1,16 @@
+{
+  "name": "zlux",
+  "version": "2.0.4",
+  "main": "",
+  "dependencies": {
+    "uikit": ">= 2.25.0",
+    "datatables": "~1.10",
+    "plupload": "~2.1.2"
+  },
+  "ignore": [
+    "node_modules",
+    "bower_components",
+    "vendor",
+    "index.html"
+  ]
+}

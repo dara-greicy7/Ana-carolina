@@ -1,0 +1,103 @@
+// Copyright (C) YOOtheme GmbH, YOOtheme Proprietary Use License (http://www.yootheme.com/license) */
+
+//
+// Component: Icon
+//
+// ========================================================================
+
+
+// Variables
+// ========================================================================
+
+@icon-small-font-size:                          120%;
+@icon-medium-font-size:                         200%;
+@icon-large-font-size:                          240%;
+
+@icon-hover-color:                              @global-color;
+@icon-hover-hover-color:                        @global-muted-color;
+
+@icon-button-height:                            @icon-button-width;
+@icon-button-border-radius:                     0;
+@icon-button-background:                        rgba(0,0,0,0);
+@icon-button-font-size:                         round((@icon-button-width * 0.5));
+@icon-button-color:                             @global-color;
+
+@icon-button-hover-background:                  rgba(0,0,0,0);
+@icon-button-hover-color:                       @global-contrast-color;
+
+@icon-button-active-background:                 rgba(0,0,0,0);
+@icon-button-active-color:                      @global-contrast-color;
+
+//
+// New
+//
+
+@icon-button-border:                            #999;
+@icon-button-hover-border:                      #444;
+@icon-button-active-border:                     #333;
+@icon-button-border-width:                      @global-border-width;
+
+
+// Modifier: `uk-icon-hover`
+// ========================================================================
+
+.hook-icon-hover() {}
+
+.hook-icon-hover-hover() {}
+
+
+// Modifier: `uk-icon-button`
+// ========================================================================
+
+.hook-icon-button() {
+
+    position: relative;
+    border: @icon-button-border solid @icon-button-border-width;
+    overflow: hidden;
+    -webkit-transition: color .4s, background .2s;
+    transition: color .4s, background .2s;
+    z-index: 1;
+
+    &:after {
+        content: "";
+        position: absolute;
+        left: -160%;
+        height: 100%;
+        width: 130%;
+        background: @icon-button-hover-border;
+        -webkit-transform: skewX(15deg);
+        transform: skewX(15deg);
+        -webkit-transition: left .25s;
+        transition: left .25s;
+        z-index: -1;
+    }
+
+}
+
+// Hover
+.hook-icon-button-hover() {
+
+    border-color: @icon-button-hover-border;
+
+    &:after { left: -15%; }
+
+}
+
+// Active
+.hook-icon-button-active() {
+
+    border-color: @icon-button-active-border;
+
+    &:after { left: -15%; }
+
+}
+
+
+// Miscellaneous
+// ========================================================================
+
+.hook-icon-misc() {
+
+    .uk-icon-hover:focus { color: @icon-hover-hover-color; }
+
+}

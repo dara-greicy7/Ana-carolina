@@ -1,0 +1,173 @@
+// Copyright (C) YOOtheme GmbH, YOOtheme Proprietary Use License (http://www.yootheme.com/license) */
+
+//
+// Component: Contrast
+//
+// ========================================================================
+
+
+// Variables
+// ========================================================================
+
+@contrast-color:                                @global-contrast-color;
+
+@contrast-base-link-color:                      lighten(@global-link-color, 20%);
+@contrast-base-link-hover-color:                @contrast-color;
+
+@contrast-base-hr-border:                       fade(@contrast-color, 10%);
+
+@contrast-nav-side-color:                       fade(@contrast-color, 70%);
+@contrast-nav-side-hover-background:            rgba(0,0,0,0);
+@contrast-nav-side-hover-color:                 @contrast-color;
+@contrast-nav-side-active-background:           rgba(0,0,0,0);
+@contrast-nav-side-active-color:                @contrast-color;
+@contrast-nav-side-divider-border:              fade(@contrast-color, 10%);
+@contrast-nav-side-nested-color:                @contrast-color;
+@contrast-nav-side-nested-hover-color:          fade(@contrast-color, 70%);
+
+@contrast-subnav-line-border:                   fade(@contrast-color, 40%);
+
+@contrast-subnav-pill-hover-background:         fade(@contrast-color, 10%);
+@contrast-subnav-pill-hover-color:              @contrast-color;
+
+@contrast-tab-border:                           fade(@contrast-color, 10%);
+@contrast-tab-color:                            fade(@contrast-color, 70%);
+@contrast-tab-hover-border:                     rgba(0,0,0,0);
+@contrast-tab-hover-background:                 rgba(0,0,0,0);
+@contrast-tab-hover-color:                      @contrast-color;
+@contrast-tab-active-border:                    rgba(0,0,0,0);
+
+@contrast-list-line-border:                     fade(@contrast-color, 10%);
+
+@contrast-form-border:                          fade(@contrast-color, 30%);
+@contrast-form-background:                      rgba(0,0,0,0);
+@contrast-form-color:                           @contrast-color;
+@contrast-form-focus-border:                    @global-primary-background;
+@contrast-form-focus-background:                rgba(0,0,0,0);
+@contrast-form-focus-color:                     @contrast-color;
+@contrast-form-placeholder-color:               fade(@contrast-color, 30%);
+
+@contrast-button-background:                    rgba(0,0,0,0);
+@contrast-button-color:                         @contrast-color;
+@contrast-button-hover-background:              rgba(0,0,0,0);
+@contrast-button-hover-color:                   @contrast-inverted-color;
+@contrast-button-active-background:             rgba(0,0,0,0);
+@contrast-button-active-color:                  @contrast-inverted-color;
+
+@contrast-button-primary-background:            @global-primary-background;
+@contrast-button-primary-color:                 @contrast-color;
+@contrast-button-primary-hover-background:      darken(@global-primary-background, 10%);
+@contrast-button-primary-hover-color:           @contrast-color;
+@contrast-button-primary-active-background:     darken(@global-primary-background, 15%);
+@contrast-button-primary-active-color:          @contrast-color;
+
+@contrast-icon-hover-color:                     @contrast-color;
+@contrast-icon-hover-hover-color:               fade(@contrast-color, 70%);
+
+@contrast-icon-button-background:               rgba(0,0,0,0);
+@contrast-icon-button-color:                    @contrast-color;
+@contrast-icon-button-hover-background:         rgba(0,0,0,0);
+@contrast-icon-button-hover-color:              @contrast-color;
+@contrast-icon-button-active-background:        rgba(0,0,0,0);
+@contrast-icon-button-active-color:             @contrast-inverted-color;
+
+@contrast-text-muted-color:                     fade(@contrast-color, 30%);
+@contrast-text-primary-color:                   @text-primary-color;
+
+//
+// New
+//
+
+@contrast-button-border:                        @contrast-color;
+
+
+// Base
+// ========================================================================
+
+.hook-contrast-base-code() {}
+
+
+// Nav
+// ========================================================================
+
+.hook-contrast-nav-side() {}
+.hook-contrast-nav-side-hover() {}
+.hook-contrast-nav-side-active() {}
+.hook-contrast-nav-side-header() {}
+.hook-contrast-nav-side-divider() {}
+
+
+// Subnav
+// ========================================================================
+
+.hook-contrast-subnav() {}
+.hook-contrast-subnav-hover() {}
+.hook-contrast-subnav-active() {}
+.hook-contrast-subnav-line-divider() {}
+.hook-contrast-subnav-pill-hover() {}
+.hook-contrast-subnav-pill-active() {}
+
+
+// Tab
+// ========================================================================
+
+.hook-contrast-tab() {}
+.hook-contrast-tab-hover() {}
+.hook-contrast-tab-active() {}
+
+
+// List
+// ========================================================================
+
+.hook-contrast-list-line() {}
+
+
+// Form
+// ========================================================================
+
+.hook-contrast-form() {}
+.hook-contrast-form-focus() {}
+
+
+// Button
+// ========================================================================
+
+.hook-contrast-button() {
+
+    &:not(.uk-button-primary) { border-color: @contrast-button-border; }
+    &:not(.uk-button-link):before { background: @contrast-button-border; }
+
+    &.uk-button-success:hover,
+    &.uk-button-danger:hover,
+    &.uk-button-success:focus,
+    &.uk-button-danger:focus { color: @contrast-color; }
+
+}
+
+.hook-contrast-button-hover() {}
+.hook-contrast-button-active() {}
+.hook-contrast-button-primary() {}
+.hook-contrast-button-primary-hover() {}
+.hook-contrast-button-primary-active() {}
+
+
+// Icon
+// ========================================================================
+
+.hook-contrast-icon-hover() {}
+.hook-contrast-icon-hover-hover() {}
+.hook-contrast-icon-button() {
+
+    border-color: @contrast-button-border;
+    &:after { background: @contrast-button-border; }
+
+}
+
+.hook-contrast-icon-button-hover() { color: @contrast-button-hover-color; }
+.hook-contrast-icon-button-active() {}
+
+
+// Miscellaneous
+// ========================================================================
+
+.hook-contrast-misc() {}

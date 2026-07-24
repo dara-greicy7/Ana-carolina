@@ -1,0 +1,168 @@
+/* Copyright (C) YOOtheme GmbH, https://www.gnu.org/licenses/gpl.html GNU/GPL */
+
+/* 
+ * Name:			UIkit Submission CSS
+ * Description:		Defines styles for UIkit ZOO App themes
+ *
+ *
+ ========================================================================== */
+
+/* ZOO - General
+ ========================================================================== */
+
+/* Fix repeatable sorting bug */
+html { overflow: visible !important; }
+body { overflow-y: scroll; }
+
+/* Space for repeatable */
+.yoo-zoo { width: calc(100% - 40px); }
+
+/* Bootstrap .row reset */
+.yoo-zoo .row { margin-left: 0 !important; }
+
+.yoo-zoo .row + .row { margin-top: 10px !important; }
+
+
+/* ZOO - Repeatable Elements
+ ========================================================================== */
+
+.repeat-elements .repeatable-element { width: calc(100% + 40px); }
+.element-textarea .repeat-elements .repeatable-element { width: calc(100% + 20px); }
+
+.repeat-elements .repeatable-element::before { display: none }
+
+.repeat-elements .repeatable-element:not(.hidden) {
+	display: flex;
+	align-items: flex-start;
+}
+
+.repeat-elements .repeatable-element > .repeatable-content { flex: 1; }
+
+.repeat-elements .repeatable-element > .delete,
+.repeat-elements .repeatable-element > .sort {
+	display: inline-block;
+	visibility: hidden;
+	margin-top: 9px;
+}
+
+.repeat-elements .repeatable-element > .sort { cursor: move; }
+.repeat-elements .repeatable-element > .delete { cursor: pointer; }
+
+.repeat-elements .repeatable-element:hover > .delete,
+.repeat-elements .repeatable-element:hover > .sort { visibility: visible; }
+
+.repeat-elements .repeatable-element:first-child > .delete,
+.repeat-elements .repeatable-element[style*="absolute"]:first-child + li > .delete { visibility: hidden; }
+
+.repeat-elements .repeatable-element.ghost .repeatable-content { background: rgba(0,0,0,0.03) !important; }
+
+.repeat-elements .repeatable-element.ghost > .delete { visibility: hidden; }
+
+.repeat-elements .repeatable-element.dragging {
+	margin-bottom: 0;
+	padding: 0;
+}
+
+
+/* ZOO - Related Items
+ ========================================================================== */
+
+.select-relateditems .item-sort,
+.select-relateditems .item-delete {
+	vertical-align: middle;
+	cursor: pointer;
+}
+ 
+
+/* ZOO - Calendar
+ ========================================================================== */
+
+.zoo-calendar {
+	margin-left: -26px !important;
+	cursor: pointer;
+}
+
+
+/* ZOO - Radio + Checkbox
+ ========================================================================== */
+
+.uk-form-controls .radio,
+.uk-form-controls .checkbox  {
+	padding: 0;
+	min-height: 0;
+}
+
+.uk-form-controls .radio > input,
+.uk-form-controls .checkbox > input { margin-right: 5px !important; }
+
+.uk-form-controls label + label { margin-left: 10px; }
+
+
+/* ZOO - Select
+ ========================================================================== */
+
+.element select[multiple],
+.element select[size] { height: 150px !important; }
+
+
+/* ZOO - Textarea
+ ========================================================================== */
+
+.element-textarea .btn-toolbar {
+    float: none;
+    margin-bottom: 0;
+}
+
+
+/* ZOO - AutoSuggest
+ ========================================================================== */
+
+ul.as-selections {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	list-style-type: none;
+	padding: 0;
+}
+
+ul.as-selections li { margin-right: 10px; }
+
+ul.as-selections li.add-tag-button { cursor: pointer; }
+
+ul.as-selections li.as-selection-item a.as-close {
+	margin-left: 5px;
+	color: inherit !important;
+	text-decoration: none !important;
+}
+
+ul.as-selections li.as-original input.ui-autocomplete-loading { background: url(../../../../../../assets/images/loader.gif) 100% 50% no-repeat; }
+
+
+/* ZOO - More Options
+ ========================================================================== */
+
+.element .more-options .options {
+	display: none;
+	margin-top: 15px;
+}
+
+.element .more-options .trigger .button {
+	font-size: 80%;
+	cursor: pointer;
+}
+
+/*
+* Advanced options
+*/
+
+.element .more-options .trigger .button.advanced.hide { display: none; }
+.element .more-options.show-advanced .trigger .button.advanced { display: none; }
+.element .more-options.show-advanced .trigger .button.advanced.hide { display: block; }
+
+.element .more-options.show-advanced .options.advanced,
+.element .more-options.show-title .options.title,
+.element .more-options.show-link .options.link,
+.element .more-options.show-lightbox .options.lightbox { display: block; }
+
+.element div.repeat-elements .hide-options .more-options .options { display: none; }
+.element div.repeat-elements li.repeatable-element.ghost .more-options .trigger { display: none; }
