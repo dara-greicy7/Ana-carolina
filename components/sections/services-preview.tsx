@@ -2,12 +2,12 @@
 
 import { motion } from "framer-motion";
 import { GlassCard } from "@/components/ui/glass-card";
-import content from "@/data/content.json";
 import Link from "next/link";
+import { services } from "@/lib/content";
+import { stripHtml } from "@/lib/sanitize";
 
 export function ServicesPreview() {
-  // @ts-ignore
-  const services = content.servicios?.slice(0, 3) || [];
+  const previewServices = services.slice(0, 3);
 
   return (
     <section className="py-24 px-6 bg-white/[0.02]" id="services">
@@ -30,9 +30,9 @@ export function ServicesPreview() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {services.map((service: any, i: number) => (
+          {previewServices.map((service, i) => (
             <motion.div
-              key={i}
+              key={service.alias}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: i * 0.1 }}
@@ -47,7 +47,7 @@ export function ServicesPreview() {
                     {service.title}
                   </h4>
                   <p className="text-white/60 leading-relaxed line-clamp-3">
-                    {service.content.replace(/<[^>]*>/g, '')}
+                    {stripHtml(service.content)}
                   </p>
                 </GlassCard>
               </Link>

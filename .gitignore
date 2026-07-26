@@ -5,6 +5,16 @@ node_modules
 dist
 coverage
 
+# Contact form submissions stored by /api/contact
+data/submissions/
+
+# E2E verification artifacts
+scripts/e2e-shots/
+
+# Legacy Joomla migration sources — kept on disk for reference, not for the repo
+public_html/
+old_images/
+
 # Secrets / database dumps — never commit
 public_html/configuration.php
 public_html/conative_db.sql

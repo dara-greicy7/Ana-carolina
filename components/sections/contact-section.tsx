@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { GlassCard } from "@/components/ui/glass-card";
-import { Button } from "@/components/ui/button";
+import { ContactForm } from "@/components/sections/contact-form";
 
 export function ContactSection() {
   return (
@@ -49,27 +49,7 @@ export function ContactSection() {
           viewport={{ once: true }}
         >
           <GlassCard className="p-8 md:p-12">
-            <form className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-white/50 mb-2">First Name</label>
-                  <input type="text" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-white/20 transition-all" placeholder="Jane" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-white/50 mb-2">Last Name</label>
-                  <input type="text" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-white/20 transition-all" placeholder="Doe" />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-white/50 mb-2">Email Address</label>
-                <input type="email" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-white/20 transition-all" placeholder="jane@example.com" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-white/50 mb-2">Message</label>
-                <textarea rows={4} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-white/20 transition-all" placeholder="Tell us about your project..."></textarea>
-              </div>
-              <Button className="w-full py-8 text-lg font-bold">Start Your Journey</Button>
-            </form>
+            <ContactForm />
           </GlassCard>
         </motion.div>
       </div>

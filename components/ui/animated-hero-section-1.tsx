@@ -1,4 +1,4 @@
- "use client";
+"use client";
 
 import * as React from "react";
 import { AnomalousMatter } from "@/components/ui/anomalous-matter";
@@ -6,17 +6,8 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
-// Interface definitions remain the same
-interface NavLink {
-  label: string;
-  href: string;
-}
-
 interface AnimatedHeroProps {
   backgroundImageUrl: string;
-  logo: React.ReactNode;
-  navLinks: NavLink[];
-  topRightAction?: React.ReactNode;
   title: string;
   subtitle?: string;
   description: string;
@@ -31,7 +22,6 @@ interface AnimatedHeroProps {
   className?: string;
 }
 
-// Animation variants remain the same
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -50,16 +40,16 @@ const itemVariants = {
     opacity: 1,
     transition: {
       duration: 0.6,
-      ease: "easeOut",
+      ease: "easeOut" as const,
     },
   },
 };
 
+// Matches the server-side rotation schedule in lib/hero-image-service.ts.
+const HERO_REFRESH_INTERVAL_MS = 30 * 60 * 1000;
+
 export const AnimatedHero = ({
   backgroundImageUrl,
-  logo,
-  navLinks,
-  topRightAction,
   title,
   subtitle,
   description,
@@ -67,25 +57,28 @@ export const AnimatedHero = ({
   secondaryCta,
   className,
 }: AnimatedHeroProps) => {
-  const [resolvedBackgroundImageUrl, setResolvedBackgroundImageUrl] = React.useState(backgroundImageUrl);
+  const [resolvedBackgroundImageUrl, setResolvedBackgroundImageUrl] =
+    React.useState(backgroundImageUrl);
 
-  React.useEffect(() => {
+  // Sync prop changes during render (React's recommended alternative to
+  // setState-in-effect for derived state).
+  const [previousUrl, setPreviousUrl] = React.useState(backgroundImageUrl);
+  if (previousUrl !== backgroundImageUrl) {
+    setPreviousUrl(backgroundImageUrl);
     setResolvedBackgroundImageUrl(backgroundImageUrl);
-  }, [backgroundImageUrl]);
+  }
 
   React.useEffect(() => {
     const controller = new AbortController();
 
-    const loadHeroImage = async (advance: boolean) => {
+    // Polls the current hero image; rotation itself happens server-side on a
+    // fixed schedule, so clients never trigger advances.
+    const refreshHeroImage = async () => {
       try {
-        const cacheBuster = `ts=${Date.now()}`;
-        const response = await fetch(
-          `/api/hero-image${advance ? "?advance=1&" : "?"}${cacheBuster}`,
-          {
-            cache: "no-store",
-            signal: controller.signal,
-          }
-        );
+        const response = await fetch("/api/hero-image", {
+          cache: "no-store",
+          signal: controller.signal,
+        });
 
         if (!response.ok) {
           return;
@@ -102,13 +95,13 @@ export const AnimatedHero = ({
           setResolvedBackgroundImageUrl((payload as { imageUrl: string }).imageUrl);
         }
       } catch {
-        // Keep the current hero background if the microservice is temporarily unavailable.
+        // Keep the current hero background if the service is temporarily unavailable.
       }
     };
 
     const intervalId = window.setInterval(() => {
-      void loadHeroImage(true);
-    }, 30 * 60 * 1000);
+      void refreshHeroImage();
+    }, HERO_REFRESH_INTERVAL_MS);
 
     return () => {
       controller.abort();
@@ -116,7 +109,6 @@ export const AnimatedHero = ({
     };
   }, []);
 
-  // Define the new reusable glass button style
   const glassButtonClassName =
     "bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 transition-colors";
 
@@ -133,7 +125,6 @@ export const AnimatedHero = ({
       />
 
       <AnomalousMatter />
-
 
       <motion.div
         variants={containerVariants}
@@ -165,7 +156,6 @@ export const AnimatedHero = ({
           variants={itemVariants}
           className="mt-10 flex items-center gap-x-4"
         >
-          {/* UPDATED: Applied the new glass button style */}
           <Button
             onClick={ctaButton.onClick}
             size="lg"
@@ -173,7 +163,6 @@ export const AnimatedHero = ({
           >
             {ctaButton.text}
           </Button>
-          {/* UPDATED: Applied the new glass button style */}
           {secondaryCta && (
             <Button
               onClick={secondaryCta.onClick}

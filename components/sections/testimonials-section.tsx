@@ -38,7 +38,7 @@ export function TestimonialsSection() {
               viewport={{ once: true }}
             >
               <GlassCard className="p-8 h-full flex flex-col justify-between italic">
-                <p className="text-lg text-white/80 mb-8">"{t.quote}"</p>
+                <p className="text-lg text-white/80 mb-8">&ldquo;{t.quote}&rdquo;</p>
                 <div className="not-italic">
                   <div className="text-white font-bold">{t.author}</div>
                   <div className="text-white/40 text-sm">{t.company}</div>

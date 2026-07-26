@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 interface NavLink {
@@ -11,11 +11,10 @@ interface NavLink {
 }
 
 interface NavbarProps {
-  logo: React.ReactNode;
   links: NavLink[];
 }
 
-export function Navbar({ logo, links }: NavbarProps) {
+export function Navbar({ links }: NavbarProps) {
   const { scrollY } = useScroll();
   const backgroundColor = useTransform(
     scrollY,
@@ -42,17 +41,26 @@ export function Navbar({ logo, links }: NavbarProps) {
       }}
       className="fixed top-0 left-0 right-0 z-50 h-20 flex items-center justify-between px-6 md:px-12 border-b transition-all duration-300"
     >
-      <div className="flex items-center gap-2">{logo}</div>
+      <div className="flex items-center gap-2">
+        <Image
+          src="/images/layout/logo.png"
+          alt="Conative Time Logo"
+          width={350}
+          height={51}
+          className="h-8 md:h-10 w-auto invert brightness-0"
+          priority
+        />
+      </div>
       <nav className="hidden md:flex items-center gap-8">
         {links.map((link) => (
           <a
             key={link.label}
             href={link.href}
             onClick={(e) => {
-               if (link.href.startsWith("#")) {
-                 e.preventDefault();
-                 document.querySelector(link.href)?.scrollIntoView({ behavior: 'smooth' });
-               }
+              if (link.href.startsWith("#")) {
+                e.preventDefault();
+                document.querySelector(link.href)?.scrollIntoView({ behavior: "smooth" });
+              }
             }}
             className="text-base font-semibold tracking-wide text-white/70 transition-colors hover:text-white"
           >
@@ -61,13 +69,12 @@ export function Navbar({ logo, links }: NavbarProps) {
         ))}
       </nav>
       <div className="flex items-center gap-4">
-        <Button 
-          onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-        className="bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 hidden md:flex text-sm font-semibold tracking-wide"
-      >
+        <Button
+          onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+          className="bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 hidden md:flex text-sm font-semibold tracking-wide"
+        >
           Consultation
         </Button>
-        {/* Mobile menu icon could go here */}
       </div>
     </motion.header>
   );

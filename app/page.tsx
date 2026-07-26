@@ -1,12 +1,13 @@
 import { HomePageClient } from "@/components/home-page-client";
-import { getHeroImageService } from "@/lib/hero-image-service";
+import { getCurrentHeroImage } from "@/lib/hero-image-service";
 
+// The hero rotation schedule lives server-side, so the page must render per
+// request (this also gives the CSP proxy a per-request nonce to work with).
 export const dynamic = "force-dynamic";
 
-export default function HomePage() {
-  const service = getHeroImageService();
-  const initialHeroImageUrl =
-    service.advance() ?? service.getCurrentImageUrl() ?? "/api/hero-image/file?name=image_1.jpg";
+export default async function HomePage() {
+  const hero = await getCurrentHeroImage();
+  const initialHeroImageUrl = hero?.url ?? "/images/layout/blog.jpg";
 
   return <HomePageClient initialHeroImageUrl={initialHeroImageUrl} />;
 }

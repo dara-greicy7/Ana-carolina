@@ -74,14 +74,14 @@ export function AnomalousMatter() {
         let z = v.z * radius;
         
         // Apply X Rotation
-        let y1 = y * cosX - z * sinX;
-        let z1 = y * sinX + z * cosX;
+        const y1 = y * cosX - z * sinX;
+        const z1 = y * sinX + z * cosX;
         y = y1;
         z = z1;
         
         // Apply Y Rotation
-        let x1 = x * cosY - z * sinY;
-        let z2 = x * sinY + z * cosY;
+        const x1 = x * cosY - z * sinY;
+        const z2 = x * sinY + z * cosY;
         x = x1;
         z = z2;
         

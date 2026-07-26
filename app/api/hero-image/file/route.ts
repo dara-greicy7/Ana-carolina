@@ -1,7 +1,11 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { NextRequest, NextResponse } from "next/server";
-import { heroImagesDirectory } from "@/lib/hero-image-service";
+import {
+  heroImagesDirectory,
+  isSupportedImageFile,
+} from "@/lib/hero-image-service";
+import { getClientKey, rateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -26,22 +30,38 @@ function getContentType(fileName: string) {
 }
 
 export async function GET(request: NextRequest) {
+  const limit = rateLimit(`hero-file:${getClientKey(request)}`, 120, 60_000);
+  if (!limit.allowed) {
+    return NextResponse.json(
+      { error: "Too many requests" },
+      {
+        status: 429,
+        headers: { "Retry-After": String(limit.retryAfterSeconds) },
+      }
+    );
+  }
+
   const fileName = request.nextUrl.searchParams.get("name");
 
-  if (!fileName) {
+  // path.basename strips any directory components (path-traversal guard) and
+  // the extension allowlist restricts serving to image files only.
+  const safeFileName = fileName ? path.basename(fileName) : null;
+
+  if (!safeFileName || !isSupportedImageFile(safeFileName)) {
     return NextResponse.json({ error: "Hero image not found" }, { status: 404 });
   }
 
-  const safeFileName = path.basename(fileName);
   const filePath = path.join(heroImagesDirectory, safeFileName);
 
   try {
-    await fs.access(filePath);
     const buffer = await fs.readFile(filePath);
-    return new NextResponse(buffer, {
+    return new NextResponse(new Uint8Array(buffer), {
       headers: {
         "Content-Type": getContentType(safeFileName),
-        "Cache-Control": "no-store, must-revalidate",
+        "Content-Length": String(buffer.byteLength),
+        // URLs are keyed by immutable file names, so day-level caching is safe.
+        "Cache-Control": "public, max-age=86400, stale-while-revalidate=3600",
+        "X-Content-Type-Options": "nosniff",
       },
     });
   } catch {
