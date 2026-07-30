@@ -2,9 +2,23 @@ import { heroImageFiles } from "./hero-manifest";
 
 // Rotation is derived from wall-clock time instead of persisted state so it
 // works identically on Node and Cloudflare Workers (no filesystem access).
-// The 30-minute cadence matches the client refresh interval in
+// The 21-second cadence matches the client rotation interval in
 // components/ui/animated-hero-section-1.tsx.
-export const HERO_ROTATION_INTERVAL_MS = 30 * 60 * 1000;
+export const HERO_ROTATION_INTERVAL_MS = 21 * 1000;
+
+export function getHeroImageUrls(): string[] {
+  return heroImageFiles.map((file) => `/hero-images/${encodeURIComponent(file)}`);
+}
+
+export function getRandomHeroImageUrl(): string | null {
+  if (heroImageFiles.length === 0) {
+    return null;
+  }
+
+  const index = Math.floor(Math.random() * heroImageFiles.length);
+  const file = heroImageFiles[index];
+  return file ? `/hero-images/${encodeURIComponent(file)}` : null;
+}
 
 export function getHeroImageIndex(now: number = Date.now()): number {
   if (heroImageFiles.length === 0) {

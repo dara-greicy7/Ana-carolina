@@ -12,9 +12,10 @@ import { ContactSection } from "@/components/sections/contact-section";
 
 type HomePageClientProps = {
   initialHeroImageUrl: string;
+  heroImageUrls?: string[];
 };
 
-export function HomePageClient({ initialHeroImageUrl }: HomePageClientProps) {
+export function HomePageClient({ initialHeroImageUrl, heroImageUrls }: HomePageClientProps) {
   const navLinks = [
     { label: "About", href: "#about" },
     { label: "Services", href: "#services" },
@@ -48,6 +49,7 @@ export function HomePageClient({ initialHeroImageUrl }: HomePageClientProps) {
 
       <AnimatedHero
         backgroundImageUrl={initialHeroImageUrl}
+        backgroundImageUrls={heroImageUrls}
         logo={logo}
         navLinks={navLinks}
         title="The Joy Of Travel"

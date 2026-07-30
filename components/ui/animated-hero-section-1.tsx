@@ -12,8 +12,11 @@ interface NavLink {
   href: string;
 }
 
+const HERO_ROTATION_INTERVAL_MS = 21 * 1000;
+
 interface AnimatedHeroProps {
   backgroundImageUrl: string;
+  backgroundImageUrls?: string[];
   logo: React.ReactNode;
   navLinks: NavLink[];
   topRightAction?: React.ReactNode;
@@ -57,6 +60,7 @@ const itemVariants = {
 
 export const AnimatedHero = ({
   backgroundImageUrl,
+  backgroundImageUrls,
   logo,
   navLinks,
   topRightAction,
@@ -74,47 +78,21 @@ export const AnimatedHero = ({
   }, [backgroundImageUrl]);
 
   React.useEffect(() => {
-    const controller = new AbortController();
-
-    const loadHeroImage = async (advance: boolean) => {
-      try {
-        const cacheBuster = `ts=${Date.now()}`;
-        const response = await fetch(
-          `/api/hero-image${advance ? "?advance=1&" : "?"}${cacheBuster}`,
-          {
-            cache: "no-store",
-            signal: controller.signal,
-          }
-        );
-
-        if (!response.ok) {
-          return;
-        }
-
-        const payload: unknown = await response.json();
-        if (
-          typeof payload === "object" &&
-          payload !== null &&
-          "imageUrl" in payload &&
-          typeof (payload as { imageUrl: unknown }).imageUrl === "string" &&
-          (payload as { imageUrl: string }).imageUrl.length > 0
-        ) {
-          setResolvedBackgroundImageUrl((payload as { imageUrl: string }).imageUrl);
-        }
-      } catch {
-        // Keep the current hero background if the microservice is temporarily unavailable.
-      }
-    };
+    if (!backgroundImageUrls || backgroundImageUrls.length < 2) {
+      return;
+    }
 
     const intervalId = window.setInterval(() => {
-      void loadHeroImage(true);
-    }, 30 * 60 * 1000);
+      setResolvedBackgroundImageUrl((current) => {
+        const currentIndex = backgroundImageUrls.indexOf(current);
+        return backgroundImageUrls[(currentIndex + 1) % backgroundImageUrls.length];
+      });
+    }, HERO_ROTATION_INTERVAL_MS);
 
     return () => {
-      controller.abort();
       window.clearInterval(intervalId);
     };
-  }, []);
+  }, [backgroundImageUrls]);
 
   // Define the new reusable glass button style
   const glassButtonClassName =
