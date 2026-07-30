@@ -1,181 +1,37 @@
-import fs from "node:fs";
-import os from "node:os";
-import path from "node:path";
+import { heroImageFiles } from "./hero-manifest";
 
-export const heroImagesDirectory = path.join(process.cwd(), "images");
-const heroImagesStateFile = path.join(os.tmpdir(), "conative-time-hero-image-state.json");
-const heroImagesLockFile = `${heroImagesStateFile}.lock`;
+// Rotation is derived from wall-clock time instead of persisted state so it
+// works identically on Node and Cloudflare Workers (no filesystem access).
+// The 30-minute cadence matches the client refresh interval in
+// components/ui/animated-hero-section-1.tsx.
+export const HERO_ROTATION_INTERVAL_MS = 30 * 60 * 1000;
 
-type HeroImageSnapshot = {
-  files: string[];
-  index: number;
-  lastAdvancedAt: number | null;
-};
-
-type HeroImageService = {
-  getCurrentFile: () => string | null;
-  getCurrentImageUrl: () => string | null;
-  advance: () => string | null;
-  refreshFiles: () => void;
-  snapshot: () => HeroImageSnapshot;
-};
-
-declare global {
-  // eslint-disable-next-line no-var
-  var __heroImageService: HeroImageService | undefined;
-}
-
-const IMAGE_EXTENSIONS = new Set([".jpg", ".jpeg", ".png", ".webp", ".gif", ".avif"]);
-const IMAGE_ORDER = new Intl.Collator(undefined, {
-  numeric: true,
-  sensitivity: "base",
-});
-
-function isSupportedImageFile(fileName: string) {
-  return IMAGE_EXTENSIONS.has(path.extname(fileName).toLowerCase());
-}
-
-function scanHeroImagesDirectory() {
-  if (!fs.existsSync(heroImagesDirectory)) {
-    return [];
-  }
-
-  return fs
-    .readdirSync(heroImagesDirectory, { withFileTypes: true })
-    .filter((entry) => entry.isFile() && isSupportedImageFile(entry.name))
-    .map((entry) => entry.name)
-    .sort((left, right) => IMAGE_ORDER.compare(left, right));
-}
-
-function readPersistedIndex() {
-  if (!fs.existsSync(heroImagesStateFile)) {
+export function getHeroImageIndex(now: number = Date.now()): number {
+  if (heroImageFiles.length === 0) {
     return -1;
   }
 
-  try {
-    const raw = fs.readFileSync(heroImagesStateFile, "utf8");
-    const parsed = JSON.parse(raw) as { index?: unknown };
-    return typeof parsed.index === "number" ? parsed.index : -1;
-  } catch {
-    return -1;
-  }
+  return Math.floor(now / HERO_ROTATION_INTERVAL_MS) % heroImageFiles.length;
 }
 
-function writePersistedIndex(index: number) {
-  const payload = JSON.stringify({ index, updatedAt: new Date().toISOString() });
-  const temporaryPath = `${heroImagesStateFile}.${process.pid}.tmp`;
-  fs.writeFileSync(temporaryPath, payload, "utf8");
-  fs.renameSync(temporaryPath, heroImagesStateFile);
+export function getCurrentHeroFile(now: number = Date.now()): string | null {
+  const index = getHeroImageIndex(now);
+  return index < 0 ? null : heroImageFiles[index] ?? null;
 }
 
-function readCurrentStateIndex() {
-  return readPersistedIndex();
+export function getCurrentHeroImageUrl(now: number = Date.now()): string | null {
+  const file = getCurrentHeroFile(now);
+  return file ? `/hero-images/${encodeURIComponent(file)}` : null;
 }
 
-function withLock<T>(run: () => T): T {
-  while (true) {
-    try {
-      const lockHandle = fs.openSync(heroImagesLockFile, "wx");
-
-      try {
-        return run();
-      } finally {
-        fs.closeSync(lockHandle);
-        fs.unlinkSync(heroImagesLockFile);
-      }
-    } catch (error) {
-      if (
-        typeof error === "object" &&
-        error !== null &&
-        "code" in error &&
-        (error as { code?: unknown }).code === "EEXIST"
-      ) {
-        try {
-          const lockStats = fs.statSync(heroImagesLockFile);
-          if (Date.now() - lockStats.mtimeMs > 15000) {
-            fs.unlinkSync(heroImagesLockFile);
-          }
-        } catch {
-          // If the lock disappeared between the failed open and the stat, retry immediately.
-        }
-
-        const waitUntil = Date.now() + 15;
-        while (Date.now() < waitUntil) {
-          // Busy-wait briefly to keep the implementation dependency-free in this local dev app.
-        }
-        continue;
-      }
-
-      throw error;
-    }
-  }
+export function isHeroImageFile(name: string): boolean {
+  return heroImageFiles.includes(name);
 }
 
-function createHeroImageService(): HeroImageService {
-  let files = scanHeroImagesDirectory();
-  let index = readPersistedIndex();
-  let lastAdvancedAt: number | null = null;
-
-  const refreshFiles = () => {
-    const nextFiles = scanHeroImagesDirectory();
-    const changed =
-      nextFiles.length !== files.length ||
-      nextFiles.some((file, fileIndex) => file !== files[fileIndex]);
-
-    if (changed) {
-      files = nextFiles;
-      index = files.length === 0 ? -1 : ((index % files.length) + files.length) % files.length;
-    }
-  };
-
-  const getCurrentFile = () => {
-    refreshFiles();
-    if (files.length === 0) {
-      return null;
-    }
-
-    const safeIndex = index < 0 ? 0 : index % files.length;
-    return files[safeIndex] ?? null;
-  };
-
-  const getCurrentImageUrl = () => {
-    const currentFile = getCurrentFile();
-    if (!currentFile) {
-      return null;
-    }
-
-    return `/api/hero-image/file?name=${encodeURIComponent(currentFile)}`;
-  };
-
-  const advance = () => {
-    return withLock(() => {
-      refreshFiles();
-      if (files.length === 0) {
-        return null;
-      }
-
-      const currentPersistedIndex = readCurrentStateIndex();
-      index = currentPersistedIndex < 0 ? 0 : (currentPersistedIndex + 1) % files.length;
-      lastAdvancedAt = Date.now();
-      writePersistedIndex(index);
-      return getCurrentImageUrl();
-    });
-  };
-
+export function getRotationTimestamps(now: number = Date.now()) {
+  const start = Math.floor(now / HERO_ROTATION_INTERVAL_MS) * HERO_ROTATION_INTERVAL_MS;
   return {
-    getCurrentFile,
-    getCurrentImageUrl,
-    advance,
-    refreshFiles,
-    snapshot: () => ({
-      files: [...files],
-      index,
-      lastAdvancedAt,
-    }),
+    rotatedAt: new Date(start).toISOString(),
+    nextRotationAt: new Date(start + HERO_ROTATION_INTERVAL_MS).toISOString(),
   };
-}
-
-export function getHeroImageService() {
-  globalThis.__heroImageService ??= createHeroImageService();
-  return globalThis.__heroImageService;
 }

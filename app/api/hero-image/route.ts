@@ -1,22 +1,23 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getHeroImageService } from "@/lib/hero-image-service";
+import { NextResponse } from "next/server";
+import {
+  getCurrentHeroFile,
+  getCurrentHeroImageUrl,
+  getRotationTimestamps,
+} from "@/lib/hero-image-service";
 
-export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
-export async function GET(request: NextRequest) {
-  const service = getHeroImageService();
-  const shouldAdvance =
-    request.nextUrl.searchParams.get("advance") === "1" ||
-    request.nextUrl.searchParams.get("refresh") === "1";
+export async function GET() {
+  const now = Date.now();
+  const { rotatedAt, nextRotationAt } = getRotationTimestamps(now);
 
-  const imageUrl = shouldAdvance
-    ? service.advance() ?? service.getCurrentImageUrl()
-    : service.getCurrentImageUrl();
-
-  return NextResponse.json({
-    imageUrl,
-    fileName: service.getCurrentFile(),
-    advanced: shouldAdvance,
-    snapshot: service.snapshot(),
-  });
+  return NextResponse.json(
+    {
+      imageUrl: getCurrentHeroImageUrl(now),
+      fileName: getCurrentHeroFile(now),
+      rotatedAt,
+      nextRotationAt,
+    },
+    { headers: { "Cache-Control": "no-store" } }
+  );
 }
