@@ -43,7 +43,8 @@ export function Navbar({ logo, links }: NavbarProps) {
       className="fixed top-0 left-0 right-0 z-50 h-20 flex items-center justify-between px-6 md:px-12 border-b transition-all duration-300"
     >
       <div className="flex items-center gap-2">{logo}</div>
-      <nav className="hidden md:flex items-center gap-8">
+      {/* Glass pill keeps the links legible over any hero image or section color */}
+      <nav className="hidden md:flex items-center gap-8 rounded-full bg-black/35 backdrop-blur-md border border-white/15 px-7 py-2.5 shadow-[0_2px_12px_rgba(0,0,0,0.25)]">
         {links.map((link) => (
           <a
             key={link.label}
@@ -54,7 +55,7 @@ export function Navbar({ logo, links }: NavbarProps) {
                  document.querySelector(link.href)?.scrollIntoView({ behavior: 'smooth' });
                }
             }}
-            className="text-base font-semibold tracking-wide text-white/70 transition-colors hover:text-white"
+            className="text-base font-semibold tracking-wide text-white/90 transition-colors hover:text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.6)]"
           >
             {link.label}
           </a>
