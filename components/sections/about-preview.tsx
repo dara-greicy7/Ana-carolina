@@ -41,6 +41,13 @@ export function AboutPreview() {
           viewport={{ once: true }}
           className="grid grid-cols-1 gap-6"
         >
+          <div className="relative rounded-3xl overflow-hidden border border-white/20 shadow-2xl shadow-black/50 aspect-square max-w-md mx-auto w-full">
+            <img
+              src="/images/ana-carolina-villar.jpeg"
+              alt="Ana Carolina Villar, MS, CMP, VEMM — Chief Experience Strategist at Conative TIME"
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+            />
+          </div>
           {awards.map((award, i) => (
             <GlassCard key={i} className="p-6 flex gap-6 items-center hover:bg-white/5 transition-colors">
               <div className="text-3xl font-bold text-white/20 font-mono">{award.year}</div>
