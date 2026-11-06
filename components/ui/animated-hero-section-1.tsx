@@ -35,8 +35,10 @@ interface AnimatedHeroProps {
 }
 
 // Animation variants remain the same
+// The container stays opaque so the headline and description (LCP candidates) paint with the
+// server HTML instead of waiting for hydration; children still stagger in.
 const containerVariants = {
-  hidden: { opacity: 0 },
+  hidden: { opacity: 1 },
   visible: {
     opacity: 1,
     transition: {
@@ -44,6 +46,11 @@ const containerVariants = {
       delayChildren: 0.2,
     },
   },
+};
+
+const headlineVariants = {
+  hidden: { y: 20, opacity: 1 },
+  visible: { y: 0, opacity: 1, transition: { duration: 0.6, ease: "easeOut" } },
 };
 
 const itemVariants = {
@@ -120,7 +127,7 @@ export const AnimatedHero = ({
         className="relative z-10 flex flex-col items-start justify-center text-left px-6 md:px-12 max-w-4xl w-full text-white"
       >
         <motion.h1
-          variants={itemVariants}
+          variants={headlineVariants}
           className="text-5xl font-extrabold tracking-tight text-white sm:text-6xl md:text-7xl lg:text-8xl"
         >
           {title}
@@ -134,7 +141,7 @@ export const AnimatedHero = ({
           </motion.h2>
         )}
         <motion.p
-          variants={itemVariants}
+          variants={headlineVariants}
           className="mt-6 max-w-2xl text-xl font-medium leading-9 text-white/80"
         >
           {description}

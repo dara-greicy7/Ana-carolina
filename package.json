@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "predev": "node scripts/sync-hero-images.mjs",
-    "dev": "next dev",
+    "dev": "next dev -p 27272",
     "prebuild": "node scripts/sync-hero-images.mjs",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 27272",
     "lint": "next lint"
   },
   "dependencies": {

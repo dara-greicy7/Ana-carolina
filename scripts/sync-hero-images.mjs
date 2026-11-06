@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { spawnSync } from "node:child_process";
 
 // Mirrors images/ into public/hero-images and regenerates the manifest so the
 // hero rotation works without runtime filesystem access (required on
@@ -25,8 +26,19 @@ const files = fs.existsSync(sourceDir)
 
 fs.mkdirSync(targetDir, { recursive: true });
 
+// Source photos are multi-megabyte camera exports; the hero never renders wider than
+// ~1600px, so the public copies are downscaled to keep LCP fast. Originals in images/
+// are never touched. sips ships with macOS; elsewhere we fall back to a plain copy.
+const MAX_EDGE = "1600";
 for (const file of files) {
-  fs.copyFileSync(path.join(sourceDir, file), path.join(targetDir, file));
+  const from = path.join(sourceDir, file);
+  const to = path.join(targetDir, file);
+  const isJpeg = /\.jpe?g$/i.test(file);
+  const resized =
+    isJpeg &&
+    spawnSync("sips", ["-Z", MAX_EDGE, "-s", "formatOptions", "62", from, "--out", to], { stdio: "ignore" })
+      .status === 0;
+  if (!resized) fs.copyFileSync(from, to);
 }
 
 for (const existing of fs.readdirSync(targetDir)) {

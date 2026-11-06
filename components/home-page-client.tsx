@@ -9,6 +9,7 @@ import { GalleryPreview } from "@/components/sections/gallery-preview";
 import { SkillsSection } from "@/components/sections/skills-section";
 import { TestimonialsSection } from "@/components/sections/testimonials-section";
 import { ContactSection } from "@/components/sections/contact-section";
+import { PlanetJourney } from "@/components/sections/planet-journey";
 
 type HomePageClientProps = {
   initialHeroImageUrl: string;
@@ -17,6 +18,7 @@ type HomePageClientProps = {
 
 export function HomePageClient({ initialHeroImageUrl, heroImageUrls }: HomePageClientProps) {
   const navLinks = [
+    { label: "Destinations", href: "#destinations" },
     { label: "About", href: "#about" },
     { label: "Services", href: "#services" },
     { label: "Skills", href: "#skills" },
@@ -65,6 +67,7 @@ export function HomePageClient({ initialHeroImageUrl, heroImageUrls }: HomePageC
         }}
       />
 
+      <PlanetJourney />
       <AboutPreview />
       <ServicesPreview />
       <SkillsSection />
