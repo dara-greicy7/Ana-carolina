@@ -13,7 +13,7 @@ export default function ContactPage() {
       <AnimatedSection className="w-full max-w-4xl px-4">
         <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-white mb-6 text-center">Contact Us</h1>
         <p className="text-lg text-white/80 max-w-2xl mb-12 text-center mx-auto">
-          We'd love to hear from you. Whether you have a question about our services, pricing, or anything else, our team is ready to answer all your questions.
+          We&apos;d love to hear from you. Whether you have a question about our services, pricing, or anything else, our team is ready to answer all your questions.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
