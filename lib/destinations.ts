@@ -84,12 +84,12 @@ export const destinations: Destination[] = [
   },
   {
     slug: "mountain-peak",
-    name: "Mountain Peaks",
-    region: "Alpine escapes",
-    headline: "The Peaks: Thin Air, Clear Head",
-    stat: "High trails, mountain lodges, snow-capped summits",
+    name: "Patagonia",
+    region: "Argentina & Chile",
+    headline: "Patagonia: Granite Spires at the End of the World",
+    stat: "Glaciers and granite peaks at the southern tip of South America",
     story:
-      "A morning hike above the tree line, a fire-lit lodge at night, and a silence that resets everything.",
+      "A morning hike under jagged spires, ice fields that stretch past the horizon, and a silence that resets everything.",
   },
   {
     slug: "punta-cana",

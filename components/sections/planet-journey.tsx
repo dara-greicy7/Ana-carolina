@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useMotionValueEvent, useReducedMotion, useScroll } from "framer-motion";
 import { destinations, type Destination } from "@/lib/destinations";
 
@@ -12,6 +12,7 @@ const clamp = (v: number, min = 0, max = 1) => Math.min(max, Math.max(min, v));
 
 const front = (d: Destination) => `/planets/${d.slug}-front.webp`;
 const back = (d: Destination) => `/planets/${d.slug}-back.webp`;
+const closeup = (d: Destination) => `/planets/${d.slug}-closeup.webp`;
 
 // Soft circular falloff hides the square edge of each source image so the globe
 // blends into the extended ambient background instead of showing a hard seam.
@@ -34,19 +35,42 @@ function useLowPower() {
   return low;
 }
 
+// Each destination's scroll segment (local 0 → 1) plays three stages: the planet's
+// front, a flip to its back, then a zoom down into the city close-up.
+function stages(local: number) {
+  return {
+    enter: ease(clamp((local + 0.22) / 0.22)), // arrives while the previous destination exits
+    flip: ease(clamp((local - 0.15) / 0.25)),
+    zoom: ease(clamp((local - 0.48) / 0.18)),
+    exit: ease(clamp((local - 0.82) / 0.18)),
+  };
+}
+
 function planetStyle(local: number, lowPower: boolean): React.CSSProperties {
   // local: 0 = arriving/settled, 1 = leaving. Negative = not yet arrived.
-  const enter = ease(clamp((local + 0.22) / 0.22)); // arrives while the previous globe exits
-  const flip = ease(clamp((local - 0.3) / 0.35)); // reveal "-180" side mid-segment
-  const exit = ease(clamp((local - 0.82) / 0.18));
-  const scale = 0.35 + 0.65 * enter - 0.45 * exit;
-  const x = (1 - enter) * 55 - exit * 60;
-  const y = (1 - enter) * 18 + exit * 8;
-  const opacity = clamp(enter * 1.4) * (1 - exit);
-  const blur = (1 - enter) * 8 + exit * 10;
+  const { enter, flip, zoom } = stages(local);
+  const scale = (0.35 + 0.65 * enter) * (1 + 0.9 * zoom);
+  const x = (1 - enter) * 55;
+  const y = (1 - enter) * 18;
+  const opacity = clamp(enter * 1.4) * (1 - zoom);
+  const blur = (1 - enter) * 8 + zoom * 6;
   return {
-    transform: `translate3d(${x}vw, ${y}vh, 0) scale(${scale}) rotateY(${flip * 180 - exit * 25}deg) rotateZ(${local * 18}deg)`,
+    transform: `translate3d(${x}vw, ${y}vh, 0) scale(${scale}) rotateY(${flip * 180}deg) rotateZ(${local * 18}deg)`,
     opacity,
+    visibility: opacity < 0.01 ? "hidden" : undefined,
+    filter: !lowPower && blur > 0.2 ? `blur(${blur.toFixed(1)}px)` : undefined,
+  };
+}
+
+function closeupStyle(local: number, lowPower: boolean): React.CSSProperties {
+  const { zoom, exit } = stages(local);
+  const scale = (0.6 + 0.4 * zoom) * (1 - 0.45 * exit);
+  const opacity = zoom * (1 - exit);
+  const blur = (1 - zoom) * 6 + exit * 10;
+  return {
+    transform: `translate3d(${-exit * 60}vw, ${exit * 8}vh, 0) scale(${scale}) rotateY(${-exit * 25}deg)`,
+    opacity,
+    visibility: opacity < 0.01 ? "hidden" : undefined,
     filter: !lowPower && blur > 0.2 ? `blur(${blur.toFixed(1)}px)` : undefined,
   };
 }
@@ -165,8 +189,8 @@ export function PlanetJourney() {
             const l = position - i;
             if (!near || l < -0.25 || l > 1.05) return null;
             return (
+              <Fragment key={d.slug}>
               <div
-                key={d.slug}
                 className="absolute w-[min(88vw,62vh)] md:w-[min(52vw,82vh)] aspect-square will-change-transform [transform-style:preserve-3d]"
                 style={planetStyle(l, lowPower)}
               >
@@ -186,6 +210,15 @@ export function PlanetJourney() {
                 />
                 <div className="absolute inset-[6%] rounded-full shadow-[0_0_120px_30px_rgba(125,211,252,0.18)] pointer-events-none" />
               </div>
+              {(
+                <div
+                  className="absolute w-[min(88vw,62vh)] md:w-[min(52vw,82vh)] aspect-square overflow-hidden rounded-[2rem] border border-white/15 shadow-[0_40px_120px_rgba(2,6,23,0.7)] will-change-transform"
+                  style={closeupStyle(l, lowPower)}
+                >
+                  <img src={closeup(d)} alt="" decoding="async" className="h-full w-full object-cover" />
+                </div>
+              )}
+              </Fragment>
             );
           })}
         </div>
