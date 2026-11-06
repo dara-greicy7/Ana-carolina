@@ -23,6 +23,8 @@ export function AboutPreview() {
           <img
             src="/images/ana-carolina-villar.jpeg"
             alt="Ana Carolina Villar, MS, CMP, VEMM — Chief Experience Strategist at Conative TIME"
+            loading="lazy"
+            decoding="async"
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-105"
           />
         </motion.div>

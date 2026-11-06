@@ -73,6 +73,19 @@ export function PlanetJourney() {
     return () => clearTimeout(pauseTimer.current);
   }, []);
 
+  // The section sits below the hero; holding its images back until it is about a
+  // screen away keeps them from competing with the hero for bandwidth on first load.
+  const [near, setNear] = useState(false);
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el || near) return;
+    const io = new IntersectionObserver(([entry]) => entry.isIntersecting && setNear(true), {
+      rootMargin: "100% 0px",
+    });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [near]);
+
   const active = Math.min(COUNT - 1, Math.floor(position));
   const local = position - active;
   const settled = local > 0.08 && local < 0.84;
@@ -131,7 +144,7 @@ export function PlanetJourney() {
       <div className="sticky top-0 h-[100svh] overflow-hidden" aria-hidden="false">
         {/* Extended background: the active globe itself, blurred, supplies a sky that matches its palette. */}
         {destinations.map((d, i) =>
-          Math.abs(i - position) < 1.5 ? (
+          near && Math.abs(i - position) < 1.5 ? (
             <div
               key={`bg-${d.slug}`}
               aria-hidden
@@ -150,7 +163,7 @@ export function PlanetJourney() {
         <div aria-hidden className="absolute inset-0 flex items-center justify-center md:justify-end md:pr-[6vw] [perspective:1600px]">
           {destinations.map((d, i) => {
             const l = position - i;
-            if (l < -0.25 || l > 1.05) return null;
+            if (!near || l < -0.25 || l > 1.05) return null;
             return (
               <div
                 key={d.slug}
