@@ -1,8 +1,9 @@
 "use client";
 
-import { Fragment, useEffect, useRef, useState } from "react";
-import { useMotionValueEvent, useReducedMotion, useScroll } from "framer-motion";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
+import { useMotionValueEvent, useReducedMotion, useScroll, useSpring } from "framer-motion";
 import { destinations, type Destination } from "@/lib/destinations";
+import { GlobeCanvas, type GlobePose } from "@/components/sections/globe-canvas";
 
 const COUNT = destinations.length;
 // The cubic-bezier(0.25, 0.1, 0.25, 1) "ease" curve, approximated by a smoothstep so
@@ -35,27 +36,55 @@ function useLowPower() {
   return low;
 }
 
-// Each destination's scroll segment (local 0 → 1) plays three stages: the planet's
-// front, a flip to its back, then a zoom down into the city close-up.
+// Each destination's scroll segment (local 0 → 1): the globe rolls in, turns to show
+// its far side, dives into the city close-up, pulls back out, then rolls away while
+// the next globe rolls in over the same stretch of scroll.
+const ENTER = 0.16;
 function stages(local: number) {
+  const zoomIn = ease(clamp((local - 0.46) / 0.14));
+  const zoomOut = ease(clamp((local - 0.7) / 0.12));
   return {
-    enter: ease(clamp((local + 0.22) / 0.22)), // arrives while the previous destination exits
-    flip: ease(clamp((local - 0.15) / 0.25)),
-    zoom: ease(clamp((local - 0.48) / 0.18)),
-    exit: ease(clamp((local - 0.82) / 0.18)),
+    enter: ease(clamp((local + ENTER) / ENTER)),
+    flip: ease(clamp((local - 0.12) / 0.26)),
+    zoom: zoomIn * (1 - zoomOut),
+    exit: ease(clamp((local - (1 - ENTER)) / ENTER)),
   };
 }
 
-function planetStyle(local: number, lowPower: boolean): React.CSSProperties {
-  // local: 0 = arriving/settled, 1 = leaving. Negative = not yet arrived.
-  const { enter, flip, zoom } = stages(local);
-  const scale = (0.35 + 0.65 * enter) * (1 + 0.9 * zoom);
-  const x = (1 - enter) * 55;
-  const y = (1 - enter) * 18;
-  const opacity = clamp(enter * 1.4) * (1 - zoom);
-  const blur = (1 - enter) * 8 + zoom * 6;
+// Fraction of the viewport width a globe travels when rolling in or out.
+const TRAVEL = 0.62;
+
+// widthOverRadius = viewport width / resting globe radius, so a globe turns by
+// distance ÷ radius as it travels: it rolls instead of sliding.
+function globePose(local: number, widthOverRadius: number): GlobePose | null {
+  if (local < -ENTER || local > 1) return null;
+  const { enter, flip, zoom, exit } = stages(local);
+  // On narrow screens a globe is most of the width, so travel at least 1.15 globe
+  // diameters (2.3 radii) or the outgoing and incoming globes would collide.
+  const travel = Math.max(TRAVEL, 2.3 / widthOverRadius);
+  const travelIn = (1 - enter) * travel;
+  const travelOut = exit * travel;
+  const scale = (0.5 + 0.5 * enter) * (1 - 0.45 * exit) * (1 + 0.9 * zoom);
+  // Average scale over the trip (~0.75) stands in for the shrinking radius.
+  const roll = widthOverRadius / 0.75;
   return {
-    transform: `translate3d(${x}vw, ${y}vh, 0) scale(${scale}) rotateY(${flip * 180}deg) rotateZ(${local * 18}deg)`,
+    yaw: travelIn * roll - Math.PI * flip - travelOut * roll,
+    pitch: 0.22 * (1 - enter) - 0.22 * exit, // leans into the direction of travel
+    x: travelIn - travelOut,
+    y: -0.07 * Math.sin(Math.PI * (1 - enter)) - 0.07 * Math.sin(Math.PI * exit),
+    scale,
+    alpha: clamp(enter * 1.6) * (1 - clamp((exit - 0.55) / 0.45)) * (1 - zoom),
+  };
+}
+
+// CSS fallback for browsers without WebGL: same timeline, flat-card flip.
+function planetStyle(local: number, lowPower: boolean): React.CSSProperties {
+  const { enter, flip, zoom, exit } = stages(local);
+  const scale = (0.5 + 0.5 * enter) * (1 - 0.45 * exit) * (1 + 0.9 * zoom);
+  const opacity = clamp(enter * 1.6) * (1 - clamp((exit - 0.55) / 0.45)) * (1 - zoom);
+  const blur = (1 - enter) * 8 + zoom * 6 + exit * 8;
+  return {
+    transform: `translate3d(${((1 - enter) * TRAVEL - exit * TRAVEL) * 100}vw, 0, 0) scale(${scale}) rotateY(${flip * 180}deg)`,
     opacity,
     visibility: opacity < 0.01 ? "hidden" : undefined,
     filter: !lowPower && blur > 0.2 ? `blur(${blur.toFixed(1)}px)` : undefined,
@@ -63,14 +92,12 @@ function planetStyle(local: number, lowPower: boolean): React.CSSProperties {
 }
 
 function closeupStyle(local: number, lowPower: boolean): React.CSSProperties {
-  const { zoom, exit } = stages(local);
-  const scale = (0.6 + 0.4 * zoom) * (1 - 0.45 * exit);
-  const opacity = zoom * (1 - exit);
-  const blur = (1 - zoom) * 6 + exit * 10;
+  const { zoom } = stages(local);
+  const blur = (1 - zoom) * 6;
   return {
-    transform: `translate3d(${-exit * 60}vw, ${exit * 8}vh, 0) scale(${scale}) rotateY(${-exit * 25}deg)`,
-    opacity,
-    visibility: opacity < 0.01 ? "hidden" : undefined,
+    transform: `scale(${0.6 + 0.4 * zoom})`,
+    opacity: zoom,
+    visibility: zoom < 0.01 ? "hidden" : undefined,
     filter: !lowPower && blur > 0.2 ? `blur(${blur.toFixed(1)}px)` : undefined,
   };
 }
@@ -84,8 +111,15 @@ export function PlanetJourney() {
   const pauseTimer = useRef<ReturnType<typeof setTimeout>>();
 
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end end"] });
+  // A slightly overdamped spring between scroll and the scene gives the globes mass:
+  // they keep moving briefly after the wheel stops and settle without bouncing.
+  const smoothProgress = useSpring(scrollYProgress, { stiffness: 90, damping: 22, mass: 1, restDelta: 0.00005 });
+  const positionRef = useRef(0);
+  const [glFailed, setGlFailed] = useState(false);
+  const onUnsupported = useCallback(() => setGlFailed(true), []);
 
-  useMotionValueEvent(scrollYProgress, "change", (v) => {
+  useMotionValueEvent(smoothProgress, "change", (v) => {
+    positionRef.current = clamp(v) * COUNT;
     setPosition(clamp(v) * COUNT);
     setPaused(false);
     clearTimeout(pauseTimer.current);
@@ -97,14 +131,19 @@ export function PlanetJourney() {
     return () => clearTimeout(pauseTimer.current);
   }, []);
 
-  // The section sits below the hero; holding its images back until it is about a
-  // screen away keeps them from competing with the hero for bandwidth on first load.
+  // The section starts one screen down. Waiting until it enters the viewport keeps
+  // its images and the WebGL setup (shader compile, texture uploads) out of first
+  // load; they run while the visitor scrolls past the hero instead.
   const [near, setNear] = useState(false);
   useEffect(() => {
     const el = sectionRef.current;
     if (!el || near) return;
+    // The hero is exactly one viewport tall, so at load the section touches the
+    // viewport's bottom edge, and an edge contact already counts as intersecting.
+    // Pulling the bottom edge in by 1px makes load report "outside", so scrolling
+    // in produces a real threshold crossing and the callback fires.
     const io = new IntersectionObserver(([entry]) => entry.isIntersecting && setNear(true), {
-      rootMargin: "100% 0px",
+      rootMargin: "0px 0px -1px 0px",
     });
     io.observe(el);
     return () => io.disconnect();
@@ -184,13 +223,25 @@ export function PlanetJourney() {
         )}
         <div aria-hidden className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,#020617_85%)]" />
 
+        {near && !glFailed && (
+          <GlobeCanvas
+            destinations={destinations}
+            positionRef={positionRef}
+            pose={globePose}
+            frontSrc={front}
+            backSrc={back}
+            lowPower={lowPower}
+            onUnsupported={onUnsupported}
+          />
+        )}
+
         <div aria-hidden className="absolute inset-0 flex items-center justify-center md:justify-end md:pr-[6vw] [perspective:1600px]">
           {destinations.map((d, i) => {
             const l = position - i;
             if (!near || l < -0.25 || l > 1.05) return null;
             return (
               <Fragment key={d.slug}>
-              <div
+              {glFailed && <div
                 className="absolute w-[min(88vw,62vh)] md:w-[min(52vw,82vh)] aspect-square will-change-transform [transform-style:preserve-3d]"
                 style={planetStyle(l, lowPower)}
               >
@@ -209,7 +260,7 @@ export function PlanetJourney() {
                   style={{ maskImage: globeMask, WebkitMaskImage: globeMask }}
                 />
                 <div className="absolute inset-[6%] rounded-full shadow-[0_0_120px_30px_rgba(125,211,252,0.18)] pointer-events-none" />
-              </div>
+              </div>}
               {(
                 <div
                   className="absolute w-[min(88vw,62vh)] md:w-[min(52vw,82vh)] aspect-square overflow-hidden rounded-[2rem] border border-white/15 shadow-[0_40px_120px_rgba(2,6,23,0.7)] will-change-transform"
