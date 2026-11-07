@@ -36,9 +36,9 @@ function useLowPower() {
   return low;
 }
 
-// Each destination's scroll segment (local 0 → 1): the globe rolls in, turns to show
-// its far side, dives into the city close-up, pulls back out, then rolls away while
-// the next globe rolls in over the same stretch of scroll.
+// Each destination's scroll segment (local 0 → 1): the globe rolls in showing its
+// "-180" opposite side, turns to the city's own little planet, dives into the city
+// close-up, pulls back out, then rolls away while the next globe rolls in.
 const ENTER = 0.16;
 function stages(local: number) {
   const zoomIn = ease(clamp((local - 0.46) / 0.14));
@@ -68,7 +68,9 @@ function globePose(local: number, widthOverRadius: number): GlobePose | null {
   // Average scale over the trip (~0.75) stands in for the shrinking radius.
   const roll = widthOverRadius / 0.75;
   return {
-    yaw: travelIn * roll - Math.PI * flip - travelOut * roll,
+    // Starts at -π (opposite side facing the camera) and keeps turning the same way
+    // through -2π, which shows the front again; rolling in and out continues that spin.
+    yaw: travelIn * roll - Math.PI - Math.PI * flip - travelOut * roll,
     pitch: 0.22 * (1 - enter) - 0.22 * exit, // leans into the direction of travel
     x: travelIn - travelOut,
     y: -0.07 * Math.sin(Math.PI * (1 - enter)) - 0.07 * Math.sin(Math.PI * exit),
@@ -84,7 +86,7 @@ function planetStyle(local: number, lowPower: boolean): React.CSSProperties {
   const opacity = clamp(enter * 1.6) * (1 - clamp((exit - 0.55) / 0.45)) * (1 - zoom);
   const blur = (1 - enter) * 8 + zoom * 6 + exit * 8;
   return {
-    transform: `translate3d(${((1 - enter) * TRAVEL - exit * TRAVEL) * 100}vw, 0, 0) scale(${scale}) rotateY(${flip * 180}deg)`,
+    transform: `translate3d(${((1 - enter) * TRAVEL - exit * TRAVEL) * 100}vw, 0, 0) scale(${scale}) rotateY(${180 + flip * 180}deg)`,
     opacity,
     visibility: opacity < 0.01 ? "hidden" : undefined,
     filter: !lowPower && blur > 0.2 ? `blur(${blur.toFixed(1)}px)` : undefined,
@@ -175,7 +177,12 @@ export function PlanetJourney() {
           <ul className="mt-12 grid gap-12 sm:grid-cols-2 lg:grid-cols-3">
             {destinations.map((d) => (
               <li key={d.slug} className="space-y-4">
-                <img src={front(d)} alt={`Illustrated little planet of ${d.name}`} loading="lazy" className="w-full aspect-square object-cover" style={{ maskImage: globeMask, WebkitMaskImage: globeMask }} />
+                {/* Same order as the animated journey: far side, the city's planet, the close-up. */}
+                <div className="grid grid-cols-3 gap-2">
+                  <img src={back(d)} alt={`Little planet showing the far side of the globe from ${d.name}`} loading="lazy" className="w-full aspect-square object-cover" style={{ maskImage: globeMask, WebkitMaskImage: globeMask }} />
+                  <img src={front(d)} alt={`Illustrated little planet of ${d.name}`} loading="lazy" className="w-full aspect-square object-cover" style={{ maskImage: globeMask, WebkitMaskImage: globeMask }} />
+                  <img src={closeup(d)} alt={`Aerial close-up of ${d.name}`} loading="lazy" className="w-full aspect-square rounded-lg object-cover" />
+                </div>
                 <h3 className="text-xl font-semibold">{d.headline}</h3>
                 <p className="text-sm text-white/60">{d.stat}</p>
                 <p className="text-white/75 leading-relaxed">{d.story}</p>
