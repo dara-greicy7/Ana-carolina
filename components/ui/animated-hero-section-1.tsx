@@ -148,7 +148,7 @@ export const AnimatedHero = ({
         </motion.p>
         <motion.div
           variants={itemVariants}
-          className="mt-10 flex items-center gap-x-4"
+          className="mt-10 flex flex-wrap items-center gap-4"
         >
           {/* UPDATED: Applied the new glass button style */}
           <Button
