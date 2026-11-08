@@ -18,7 +18,7 @@ export default function GalleryPage({ searchParams }: GalleryPageProps) {
     <main className="relative min-h-screen overflow-hidden bg-[#060814]">
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.16),_transparent_40%),linear-gradient(180deg,_rgba(9,12,24,0.98),_rgba(4,6,14,1))]" />
 
-      <div className="mx-auto flex max-w-7xl flex-wrap gap-3 px-6 pt-6">
+      <div className="mx-auto flex max-w-7xl flex-wrap gap-3 px-6 pt-24">
         {galleryDestinations.map((item) => {
           const isActive = item.slug === destination.slug;
 

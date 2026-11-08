@@ -8,10 +8,15 @@ export default function HomePage() {
   // the client then rotates sequentially from there every 21 seconds.
   const initialHeroImageUrl = getRandomHeroImageUrl() ?? "/hero-images/image_1.jpg";
 
+  // The hero photo is a CSS background, which the browser only discovers after styles
+  // load; preloading it is the largest single LCP win on this page.
   return (
-    <HomePageClient
-      initialHeroImageUrl={initialHeroImageUrl}
-      heroImageUrls={getHeroImageUrls()}
-    />
+    <>
+      <link rel="preload" as="image" href={initialHeroImageUrl} fetchPriority="high" />
+      <HomePageClient
+        initialHeroImageUrl={initialHeroImageUrl}
+        heroImageUrls={getHeroImageUrls()}
+      />
+    </>
   );
 }

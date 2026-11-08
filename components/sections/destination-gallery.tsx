@@ -50,7 +50,7 @@ export function DestinationGallery({ destination }: DestinationGalleryProps) {
       <div className="mx-auto max-w-7xl">
         <div className="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div className="max-w-3xl">
-            <p className="text-xs font-bold uppercase tracking-[0.45em] text-white/45">
+            <p className="text-xs font-bold uppercase tracking-[0.45em] text-white/65">
               Gallery
             </p>
             <h1 className="mt-4 text-4xl font-bold tracking-tight text-white md:text-6xl">

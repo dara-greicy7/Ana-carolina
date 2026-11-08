@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "gray-on-color",
+        "value": "*",
+        "files": [
+          "components/sections/planet-journey.tsx"
+        ],
+        "createdAt": "2026-11-06T17:32:47.733Z",
+        "reason": "model triage: L188 is slate-900 text on a white button, not gray on color"
+      }
+    ]
+  }
+}
