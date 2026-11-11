@@ -1,0 +1,226 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { useMotionValueEvent, useReducedMotion, useScroll, useSpring } from "framer-motion";
+import { ChevronDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { destinations } from "@/lib/destinations";
+import { heroPlanetDisc, heroPlanetFrames, heroPlanetFrame } from "@/lib/hero-planets";
+
+type PlanetHeroProps = {
+  title: string;
+  subtitle: string;
+  description: string;
+  primaryCta: { text: string; onClick: () => void };
+  secondaryCta: { text: string; onClick: () => void };
+};
+
+// Scroll budget per destination, in viewport heights.
+const PER_CITY_VH = 40;
+// Within one destination: the far side turns to face you, the planet holds,
+// with that city's close-up as the backdrop the whole time.
+const TURN_END = 0.55;
+
+const clamp = (v: number, lo = 0, hi = 1) => Math.min(hi, Math.max(lo, v));
+const ease = (t: number) => t * t * (3 - 2 * t);
+const closeup = (slug: string) => `/planets/${slug}-closeup-1920.webp`;
+// 3840 px (4K) for large or high-density screens; the browser picks per viewport.
+const closeupSet = (slug: string) =>
+  `/planets/${slug}-closeup-1920.webp 1920w, /planets/${slug}-closeup-3840.webp 3840w`;
+
+export function PlanetHero({ title, subtitle, description, primaryCta, secondaryCta }: PlanetHeroProps) {
+  const reduce = useReducedMotion();
+  const trackRef = useRef<HTMLElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const posRef = useRef(0);
+  const [index, setIndex] = useState(0);
+  // Exactly one city is ever behind the planet. The swap waits until the new
+  // close-up has decoded, so it is a clean cut rather than a blank or a blend.
+  const [bgSlug, setBgSlug] = useState(destinations[0].slug);
+  const count = destinations.length;
+
+  const { scrollYProgress } = useScroll({ target: trackRef, offset: ["start start", "end end"] });
+  const smooth = useSpring(scrollYProgress, { stiffness: 120, damping: 26, restDelta: 0.0001 });
+  useMotionValueEvent(smooth, "change", (v) => {
+    const pos = clamp(v) * count;
+    posRef.current = pos;
+    const i = Math.min(count - 1, Math.floor(pos));
+    setIndex((cur) => (cur === i ? cur : i));
+  });
+
+  useEffect(() => {
+    if (reduce) return;
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !ctx) return;
+    const cache = new Map<string, HTMLImageElement>();
+    let dirty = true;
+    const get = (src: string) => {
+      let img = cache.get(src);
+      if (!img) {
+        img = new Image();
+        img.decoding = "async";
+        img.onload = () => {
+          dirty = true;
+        };
+        img.src = src;
+        cache.set(src, img);
+      }
+      return img.complete && img.naturalWidth > 0 ? img : null;
+    };
+
+    let raf = 0;
+    let last = -1;
+    const frame = () => {
+      raf = requestAnimationFrame(frame);
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = Math.round(canvas.clientWidth * dpr);
+      const h = Math.round(canvas.clientHeight * dpr);
+      if (canvas.width !== w || canvas.height !== h) {
+        canvas.width = w;
+        canvas.height = h;
+        dirty = true;
+      }
+      const pos = posRef.current;
+      if (!dirty && pos === last) return;
+      last = pos;
+      dirty = false;
+
+      const i = Math.min(count - 1, Math.floor(pos));
+      const local = pos - i;
+      const slug = destinations[i].slug;
+      // Warm the whole turn of this planet and the opening frames of the next one.
+      for (let f = 0; f < heroPlanetFrames; f++) get(heroPlanetFrame(slug, f));
+      if (i + 1 < count) for (let f = 0; f < 4; f++) get(heroPlanetFrame(destinations[i + 1].slug, f));
+
+      const turn = ease(clamp(local / TURN_END));
+      const want = Math.round(turn * (heroPlanetFrames - 1));
+      // Fall back to the nearest decoded frame so the planet never blinks out.
+      let img: HTMLImageElement | null = null;
+      for (let d = 0; d < heroPlanetFrames && !img; d++) {
+        img = get(heroPlanetFrame(slug, Math.max(0, want - d))) ?? get(heroPlanetFrame(slug, Math.min(heroPlanetFrames - 1, want + d)));
+      }
+      // The planet never shrinks, moves or fades out: over the last tenth of a
+      // destination the next planet's far side dissolves in on top of it, at
+      // the same size and place, so a planet is always on screen.
+      const handoff = i === count - 1 ? 0 : ease(clamp((local - 0.9) / 0.1));
+      const next = handoff > 0 ? get(heroPlanetFrame(destinations[i + 1].slug, 0)) : null;
+
+      ctx.clearRect(0, 0, w, h);
+      if (img) {
+        // Desktop sizing measured from the approved reference: the disc spans
+        // 90.5% of the viewport height (43.2% of its width), its right edge sits
+        // at 94.4% of the width and its centre at 54.1% of the height.
+        const wide = canvas.clientWidth >= 768;
+        const disc = wide ? Math.min(0.905 * h, 0.432 * w) : Math.min(w, h) * 0.92 * 0.98;
+        const size = disc / heroPlanetDisc;
+        const cx = wide ? 0.944 * w - disc / 2 : w / 2;
+        const cy = wide ? 0.541 * h : h / 2;
+        ctx.drawImage(img, cx - size / 2, cy - size / 2, size, size);
+        if (next) {
+          ctx.globalAlpha = handoff;
+          ctx.drawImage(next, cx - size / 2, cy - size / 2, size, size);
+          ctx.globalAlpha = 1;
+        }
+      }
+    };
+    raf = requestAnimationFrame(frame);
+    return () => cancelAnimationFrame(raf);
+  }, [reduce, count]);
+
+  // Lands where the next planet has just turned to face the visitor.
+  const nextCity = () => {
+    const track = trackRef.current;
+    if (!track || index >= count - 1) {
+      document.getElementById("about")?.scrollIntoView({ behavior: "smooth" });
+      return;
+    }
+    const top = track.getBoundingClientRect().top + window.scrollY;
+    const length = track.offsetHeight - window.innerHeight;
+    window.scrollTo({ top: top + (length * (index + 1 + TURN_END)) / count, behavior: "smooth" });
+  };
+
+  const skipCities = () => {
+    document.getElementById("about")?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    let live = true;
+    const load = (slug: string) => {
+      const img = new Image();
+      img.sizes = "100vw";
+      img.srcset = closeupSet(slug);
+      img.src = closeup(slug);
+      return img.decode().catch(() => undefined);
+    };
+    const slug = destinations[index].slug;
+    load(slug).then(() => live && setBgSlug(slug));
+    if (index + 1 < destinations.length) load(destinations[index + 1].slug);
+    return () => {
+      live = false;
+    };
+  }, [index]);
+
+  const d = destinations[index];
+  const copy = (
+    <div className="relative z-10 max-w-xl [text-shadow:0_2px_14px_rgba(2,6,23,0.85),0_1px_3px_rgba(2,6,23,0.9)]">
+      <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-6xl md:text-7xl">{title}</h1>
+      <p className="mt-3 text-xl font-bold tracking-tight text-white/90 sm:mt-4 sm:text-3xl">{subtitle}</p>
+      <p className="mt-4 text-base font-medium leading-7 text-white/85 sm:mt-6 sm:text-lg sm:leading-8">{description}</p>
+      <div className="mt-6 flex flex-wrap items-center gap-3 sm:mt-8 sm:gap-4">
+        <Button onClick={primaryCta.onClick} size="lg" className="bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 text-base font-semibold tracking-wide">
+          {primaryCta.text}
+        </Button>
+        <Button onClick={secondaryCta.onClick} size="lg" className="bg-white text-slate-900 hover:bg-sky-100 text-base font-semibold tracking-wide">
+          {secondaryCta.text}
+        </Button>
+      </div>
+    </div>
+  );
+
+  if (reduce) {
+    return (
+      <section aria-label="Welcome" className="relative flex min-h-screen items-center bg-[#0b1224] px-6 pt-24 pb-16 md:px-12">
+        <div className="mx-auto grid w-full max-w-7xl items-center gap-10 md:grid-cols-2">
+          {copy}
+          <img src={heroPlanetFrame(destinations[0].slug, heroPlanetFrames - 1)} alt={`Little planet of ${destinations[0].name}`} width={720} height={720} className="mx-auto w-full max-w-[560px]" />
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section ref={trackRef} id="destinations" aria-label="Welcome" className="relative bg-[#0b1224]" style={{ height: `calc(100vh + ${count * PER_CITY_VH}vh)` }}>
+      <div className="sticky top-0 h-screen overflow-hidden">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={closeup(bgSlug)} srcSet={closeupSet(bgSlug)} sizes="100vw" alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover" />
+        <div aria-hidden className="absolute inset-0 bg-gradient-to-b from-[#0b1224]/75 via-[#0b1224]/45 to-transparent md:bg-gradient-to-r md:from-[#0b1224]/80 md:via-[#0b1224]/40 md:via-35% md:to-transparent md:to-55%" />
+        <div className="relative mx-auto grid h-full md:static w-full max-w-7xl grid-rows-[auto_1fr] items-center gap-2 px-6 pt-24 pb-10 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] md:grid-rows-1 md:px-12 md:pt-20">
+          <div>
+            {copy}
+            <p className="relative z-10 mt-4 text-xs font-semibold [text-shadow:0_1px_3px_rgba(2,6,23,0.9)] sm:mt-8 sm:text-sm uppercase tracking-[0.2em] text-sky-200" aria-hidden>
+              {d.name}, {d.region}
+            </p>
+          </div>
+          <canvas ref={canvasRef} aria-hidden className="h-full max-h-[78vh] w-full md:absolute md:inset-0 md:max-h-none" />
+        </div>
+        <p className="sr-only">Scrolling turns a small planet for each of our {count} destinations.</p>
+        <button
+          type="button"
+          onClick={nextCity}
+          aria-label={index < count - 1 ? `Next destination: ${destinations[index + 1].name}` : "Continue to About"}
+          className="absolute bottom-3 left-1/2 flex h-11 w-11 -translate-x-1/2 items-center justify-center rounded-full text-white/70 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-300"
+        >
+          <ChevronDown aria-hidden className="h-6 w-6 animate-bounce" />
+        </button>
+        <button
+          type="button"
+          onClick={skipCities}
+          className="absolute bottom-8 right-4 md:right-6 hidden md:block rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs uppercase tracking-[0.2em] text-white/70 backdrop-blur hover:bg-white/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-300"
+        >
+          Skip cities
+        </button>
+      </div>
+    </section>
+  );
+}

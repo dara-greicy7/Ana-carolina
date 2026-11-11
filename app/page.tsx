@@ -1,22 +1,13 @@
 import { HomePageClient } from "@/components/home-page-client";
-import { getHeroImageUrls, getRandomHeroImageUrl } from "@/lib/hero-image-service";
-
-export const dynamic = "force-dynamic";
+import { destinations } from "@/lib/destinations";
+import { heroPlanetFrame } from "@/lib/hero-planets";
 
 export default function HomePage() {
-  // A random pick per request makes the hero change on every page refresh;
-  // the client then rotates sequentially from there every 21 seconds.
-  const initialHeroImageUrl = getRandomHeroImageUrl() ?? "/hero-images/image_1.jpg";
-
-  // The hero photo is a CSS background, which the browser only discovers after styles
-  // load; preloading it is the largest single LCP win on this page.
+  // The hero opens on the first planet's far side; fetch it with the HTML.
   return (
     <>
-      <link rel="preload" as="image" href={initialHeroImageUrl} fetchPriority="high" />
-      <HomePageClient
-        initialHeroImageUrl={initialHeroImageUrl}
-        heroImageUrls={getHeroImageUrls()}
-      />
+      <link rel="preload" as="image" href={heroPlanetFrame(destinations[0].slug, 0)} fetchPriority="high" />
+      <HomePageClient />
     </>
   );
 }

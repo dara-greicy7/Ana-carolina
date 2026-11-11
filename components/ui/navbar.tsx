@@ -91,7 +91,7 @@ export function Navbar() {
               key={link.id}
               href={`/#${link.id}`}
               onClick={goTo(link.id)}
-              className="text-base font-semibold tracking-wide text-white/90 transition-colors hover:text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.6)]"
+              className="text-xs tracking-[0.2em] text-white/70 transition-colors hover:text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.6)]"
             >
               {link.label}
             </a>
@@ -100,7 +100,7 @@ export function Navbar() {
         <div className="flex items-center gap-4">
           <Button
             asChild
-            className="bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 hidden md:flex text-sm font-semibold tracking-wide"
+            className="bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 hidden md:flex text-xs font-normal tracking-[0.2em] text-white/70 hover:text-white"
           >
             <a href="/#contact" onClick={goTo("contact")}>
               Consultation
