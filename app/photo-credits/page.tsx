@@ -21,7 +21,7 @@ export default function PhotoCreditsPage() {
     <section className="mx-auto max-w-4xl px-6 pt-32 pb-24">
       <h1 className="text-4xl font-bold">Photo credits</h1>
       <p className="mt-4 text-white/70">
-        The destination photos on the home page are real photographs from Wikimedia Commons, used under the licences below.
+        The destination photos on the home page are real photographs. Most come from Wikimedia Commons and are used under the licences below; the rest were provided by Conative Time.
         They are resized for the web; nothing else is changed.
       </p>
       <ul className="mt-10 divide-y divide-white/10">
@@ -31,12 +31,21 @@ export default function PhotoCreditsPage() {
               {name(c.slug)} · {c.phase === "day" ? "Day" : "Night"}
             </p>
             <p className="mt-1 text-white/70">
-              <a href={c.source} target="_blank" rel="noreferrer" className="underline hover:text-white">{c.title}</a>
-              {c.author && <> by {c.author}</>},{" "}
-              {LICENSE_URL[c.license] ? (
-                <a href={LICENSE_URL[c.license]} target="_blank" rel="noreferrer" className="underline hover:text-white">{c.license}</a>
+              {c.source ? (
+                <a href={c.source} target="_blank" rel="noreferrer" className="underline hover:text-white">{c.title}</a>
               ) : (
-                c.license
+                c.title
+              )}
+              {c.author && <> by {c.author}</>}
+              {c.license && (
+                <>
+                  ,{" "}
+                  {LICENSE_URL[c.license] ? (
+                    <a href={LICENSE_URL[c.license]} target="_blank" rel="noreferrer" className="underline hover:text-white">{c.license}</a>
+                  ) : (
+                    c.license
+                  )}
+                </>
               )}
             </p>
           </li>
