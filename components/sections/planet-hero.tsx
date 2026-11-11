@@ -6,6 +6,8 @@ import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { destinations } from "@/lib/destinations";
 import { heroPlanetDisc, heroPlanetFrames, heroPlanetFrame } from "@/lib/hero-planets";
+import type { DayPhase } from "@/lib/day-phase";
+import { useDayPhase } from "@/lib/use-day-phase";
 
 type PlanetHeroProps = {
   title: string;
@@ -23,10 +25,15 @@ const TURN_END = 0.55;
 
 const clamp = (v: number, lo = 0, hi = 1) => Math.min(hi, Math.max(lo, v));
 const ease = (t: number) => t * t * (3 - 2 * t);
-const closeup = (slug: string) => `/planets/${slug}-closeup-1920.webp`;
+// Real photographs (see /photo-credits), one for daytime and one for night.
+// Machu Picchu has no usable night photo, so it keeps its day photo at night.
+const NO_NIGHT_PHOTO = new Set(["machu-picchu"]);
+const photoBase = (slug: string, phase: DayPhase) =>
+  `/planets/${slug}-${phase === "night" && !NO_NIGHT_PHOTO.has(slug) ? "night" : "day"}`;
+const photo = (slug: string, phase: DayPhase) => `${photoBase(slug, phase)}-1920.webp`;
 // 3840 px (4K) for large or high-density screens; the browser picks per viewport.
-const closeupSet = (slug: string) =>
-  `/planets/${slug}-closeup-1920.webp 1920w, /planets/${slug}-closeup-3840.webp 3840w`;
+const photoSet = (slug: string, phase: DayPhase) =>
+  `${photoBase(slug, phase)}-1920.webp 1920w, ${photoBase(slug, phase)}-3840.webp 3840w`;
 
 export function PlanetHero({ title, subtitle, description, primaryCta, secondaryCta }: PlanetHeroProps) {
   const reduce = useReducedMotion();
@@ -36,7 +43,8 @@ export function PlanetHero({ title, subtitle, description, primaryCta, secondary
   const [index, setIndex] = useState(0);
   // Exactly one city is ever behind the planet. The swap waits until the new
   // close-up has decoded, so it is a clean cut rather than a blank or a blend.
-  const [bgSlug, setBgSlug] = useState(destinations[0].slug);
+  const phase = useDayPhase();
+  const [bg, setBg] = useState<{ slug: string; phase: DayPhase } | null>(null);
   const count = destinations.length;
 
   const { scrollYProgress } = useScroll({ target: trackRef, offset: ["start start", "end end"] });
@@ -145,21 +153,22 @@ export function PlanetHero({ title, subtitle, description, primaryCta, secondary
   };
 
   useEffect(() => {
+    if (!phase) return;
     let live = true;
     const load = (slug: string) => {
       const img = new Image();
       img.sizes = "100vw";
-      img.srcset = closeupSet(slug);
-      img.src = closeup(slug);
+      img.srcset = photoSet(slug, phase);
+      img.src = photo(slug, phase);
       return img.decode().catch(() => undefined);
     };
     const slug = destinations[index].slug;
-    load(slug).then(() => live && setBgSlug(slug));
+    load(slug).then(() => live && setBg({ slug, phase }));
     if (index + 1 < destinations.length) load(destinations[index + 1].slug);
     return () => {
       live = false;
     };
-  }, [index]);
+  }, [index, phase]);
 
   const d = destinations[index];
   const copy = (
@@ -193,7 +202,7 @@ export function PlanetHero({ title, subtitle, description, primaryCta, secondary
     <section ref={trackRef} id="destinations" aria-label="Welcome" className="relative bg-[#0b1224]" style={{ height: `calc(100vh + ${count * PER_CITY_VH}vh)` }}>
       <div className="sticky top-0 h-screen overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={closeup(bgSlug)} srcSet={closeupSet(bgSlug)} sizes="100vw" alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover" />
+        {bg && <img src={photo(bg.slug, bg.phase)} srcSet={photoSet(bg.slug, bg.phase)} sizes="100vw" alt="" aria-hidden data-phase={bg.phase} className="absolute inset-0 h-full w-full object-cover" />}
         <div aria-hidden className="absolute inset-0 bg-gradient-to-b from-[#0b1224]/75 via-[#0b1224]/45 to-transparent md:bg-gradient-to-r md:from-[#0b1224]/80 md:via-[#0b1224]/40 md:via-35% md:to-transparent md:to-55%" />
         <div className="relative mx-auto grid h-full md:static w-full max-w-7xl grid-rows-[auto_1fr] items-center gap-2 px-6 pt-24 pb-10 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] md:grid-rows-1 md:px-12 md:pt-20">
           <div>

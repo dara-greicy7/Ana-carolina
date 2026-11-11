@@ -40,6 +40,7 @@ export default function RootLayout({
                 <a href="#portfolio" className="hover:text-white transition-colors">Portfolio</a>
                 <a href="/blog" className="hover:text-white transition-colors">Insights (Blog)</a>
                 <a href="/files/Terms_and_Conditions.pdf" target="_blank" className="hover:text-white transition-colors">Terms & Conditions</a>
+                <a href="/photo-credits" className="hover:text-white transition-colors">Photo Credits</a>
               </nav>
             </div>
 
