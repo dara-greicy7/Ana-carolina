@@ -2,9 +2,11 @@
 
 blender -b --factory-startup -P pipeline.py -- [KEY ...]
 
-For each MINI-PLANET/<key>.png (front) and PLACES/<key>-180.png (back):
+For each MINI-PLANET/<key>.png (the city artwork; the "-180" antipode images
+are no longer used, the city wraps the whole sphere):
   1. measure style parameters from the source pixels (read only, never written)
-  2. reproject both hemispheres onto an equirectangular texture (EXR, lossless)
+  2. reproject the artwork onto both hemispheres of an equirectangular texture
+     (EXR, lossless), continuous across the limb
   3. build a 256-segment UV sphere, luminance relief <= 0.5% of radius,
      emission-dominant shading so colours stay on the source, a measured key
      light and an atmosphere shell sized from the measured edge haze
@@ -108,7 +110,7 @@ def bilinear(a, u, v):
             + a[y1, x0] * (1 - fx) * fy + a[y1, x1] * fx * fy)
 
 
-def equirect(front, back, rf, rb):
+def equirect(front, rf):
     lon = ((np.arange(EQ_W) + 0.5) / EQ_W * 2 * np.pi - np.pi).astype(np.float32)
     lat = (np.pi / 2 - (np.arange(EQ_H) + 0.5) / EQ_H * np.pi).astype(np.float32)
     lon, lat = np.meshgrid(lon, lat)
@@ -126,10 +128,9 @@ def equirect(front, back, rf, rb):
         return np.where(th < THETA0, np.sin(th), h)
     rho = np.hypot(x, y) + 1e-9
     k = radius(z) / rho
-    f = bilinear(front, 0.5 + x * k * rf, 0.5 - y * k * rf)
-    b = bilinear(back, 0.5 - x * k * rb, 0.5 - y * k * rb)
-    t = np.clip((z + 0.15) / 0.3, 0, 1); t = t * t * (3 - 2 * t)
-    return f * t[..., None] + b * (1 - t[..., None])
+    # The far hemisphere samples the same artwork at the same (x, y), so the
+    # texture is continuous across the limb and the city is all the planet shows.
+    return bilinear(front, 0.5 + x * k * rf, 0.5 - y * k * rf)
 
 
 def save_exr(name, rgb, path):
@@ -386,10 +387,10 @@ def run(keys):
         ta = time.time()
         city = key.split("_", 1)[1]
         d = f"{OUT}/{key}"; os.makedirs(d, exist_ok=True)
-        fp = f"{ROOT}/MINI-PLANET/{key}.png"; bp = f"{ROOT}/PLACES/{key}-180.png"
-        front, back = load_rgb(fp), load_rgb(bp)
-        mf, mb = measure(front), measure(back)
-        eq = equirect(front, back, mf["r_ring"], mb["r_ring"])
+        fp = f"{ROOT}/MINI-PLANET/{key}.png"
+        front = load_rgb(fp)
+        mf = measure(front)
+        eq = equirect(front, mf["r_ring"])
         tex = save_exr(f"TEX_{key}", eq, f"{d}/{city}_equirect.exr")
         scale = 1.0 / mf["r_ring"]  # sphere diameter lands on the measured ring diameter
         ob, sh, cam = build_scene(tex, mf, scale)
@@ -424,18 +425,17 @@ def run(keys):
         wd = f"{WEB_OUT}/{key}"; os.makedirs(wd, exist_ok=True)
         seq = []
         for i in range(WEB_STEPS + 1):
-            set_yaw(ob, sh, 180 - i * 180 / WEB_STEPS)  # back faces camera first, front last
+            set_yaw(ob, sh, 180 - i * 180 / WEB_STEPS)  # far side faces camera first, the city last
             p = f"{wd}/f_{i:02d}.png"; render(p, WEB_PX, "PNG"); seq.append(read_png(p))
         q = qa(key, front, mf, final_png, seq)
         q["file_integrity"] = dict(states=st, pass_=all(v["pass_"] for v in st.values()))
         ok = all(v["pass_"] for v in q.values())
         side = {
-            "source_image": os.path.basename(fp), "source_back_image": os.path.basename(bp),
+            "source_image": os.path.basename(fp),
             "source_resolution": list(front.shape[:2][::-1]),
             "distortion_model": "orthographic hemisphere, limb at measured cloud-ring radius",
             "distortion_coefficient": round(mf["r_ring"] / 0.5, 4),
             "ring_radius_px": round(mf["r_ring"] * front.shape[1], 1),
-            "back_ring_radius_px": round(mb["r_ring"] * back.shape[1], 1),
             "light_direction": mf["light_direction"], "palette_top5": mf["palette"],
             "palette_share": mf["palette_share"], "haze_edge_over_centre": mf["haze_edge_over_centre"],
             "safe_zone_bounds": {"x1": 0, "y1": 0, "x2": int(0.35 * front.shape[1]), "y2": front.shape[0]},

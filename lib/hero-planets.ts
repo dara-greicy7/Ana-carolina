@@ -1,5 +1,6 @@
 // Frames come from PLACES/blender/MINI-PLANET-3D/pipeline.py: each planet turns
-// 180 degrees, frame 0 shows the "-180" far side and the last frame the city.
+// 180 degrees sideways, from its far side to the city. The city artwork wraps
+// the whole sphere; the "-180" antipode images are not used.
 // scripts/build-hero-planets.sh encodes them into public/hero-planets/<slug>/.
 export const heroPlanetFrames = 25;
 
