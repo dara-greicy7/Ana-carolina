@@ -20,7 +20,7 @@ export function DayNightToggle() {
           aria-pressed={phase === value}
           aria-label={label}
           title={label}
-          className={`flex h-11 w-11 items-center justify-center rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-300 ${
+          className={`flex h-11 w-7 items-center justify-center rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-300 ${
             phase === value ? "text-white" : "text-white/45 hover:text-white"
           }`}
         >
