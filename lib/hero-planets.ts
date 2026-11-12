@@ -1,11 +1,9 @@
-// Frames come from PLACES/blender/MINI-PLANET-3D/pipeline.py: each planet turns
-// 180 degrees, frame 0 shows the "-180" far side and the last frame the city.
-// scripts/build-hero-planets.sh encodes them into public/hero-planets/<slug>/.
-export const heroPlanetFrames = 25;
+// The 14 original mini-planet artworks (PLACES/MINI-PLANET), encoded whole by
+// scripts/build-mini-planets.py: only the corners outside the inscribed circle
+// are faded, so every painted landmark stays intact. The hero spins each one
+// about its own axis as the visitor scrolls.
+export const miniPlanet = (slug: string) => `/mini-planets/${slug}.webp`;
 
-// Every frame is rendered with the same orthographic scale (WEB_ORTHO = 2.2 in
-// the pipeline), so the planet's diameter is the same fraction of every frame.
-export const heroPlanetDisc = 2 / 2.2;
-
-export const heroPlanetFrame = (slug: string, i: number) =>
-  `/hero-planets/${slug}/${String(i).padStart(2, "0")}.webp`;
+// Degrees a planet turns while it settles upright; it keeps turning the same
+// way as it hands over to the next city.
+export const PLANET_SPIN_DEG = 120;
