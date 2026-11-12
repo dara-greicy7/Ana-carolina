@@ -14,7 +14,7 @@ blender -b --factory-startup -P pipeline.py -- 1_PARIS # one
 | `<CITY>_FINAL.exr` | Planet facing the camera (yaw 0) |
 | `<CITY>_PRE_TRANSITION.exr` | Same planet at yaw -15 deg |
 | `<CITY>_POST_TRANSITION.exr` | Same planet at yaw +15 deg |
-| `<CITY>_equirect.exr` | The sphere texture: the city artwork reprojected onto both hemispheres (no "-180" antipode image), half float |
+| `<CITY>_equirect.exr` | The sphere texture: the city on the near hemisphere and the previous city on the far one (no "-180" antipode image, no mirrored copy), half float |
 | `<CITY>.json` | Measured style parameters, QA results, PASS/FAIL |
 | `_qa_final.png` | 8-bit render used only by the colour check; not a deliverable |
 

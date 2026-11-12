@@ -2,11 +2,13 @@
 
 blender -b --factory-startup -P pipeline.py -- [KEY ...]
 
-For each MINI-PLANET/<key>.png (the city artwork; the "-180" antipode images
-are no longer used, the city wraps the whole sphere):
+For each MINI-PLANET/<key>.png (front) the far hemisphere is the PREVIOUS city's
+MINI-PLANET artwork (Paris wraps to Machu Picchu), so turning the sphere goes
+from one real city to the next. The "-180" antipode images are not used, and no
+city is ever mirrored onto its own far side.
   1. measure style parameters from the source pixels (read only, never written)
-  2. reproject the artwork onto both hemispheres of an equirectangular texture
-     (EXR, lossless), continuous across the limb
+  2. reproject front and previous-city hemispheres onto an equirectangular
+     texture (EXR, lossless)
   3. build a 256-segment UV sphere, luminance relief <= 0.5% of radius,
      emission-dominant shading so colours stay on the source, a measured key
      light and an atmosphere shell sized from the measured edge haze
@@ -110,7 +112,7 @@ def bilinear(a, u, v):
             + a[y1, x0] * (1 - fx) * fy + a[y1, x1] * fx * fy)
 
 
-def equirect(front, rf):
+def equirect(front, back, rf, rb):
     lon = ((np.arange(EQ_W) + 0.5) / EQ_W * 2 * np.pi - np.pi).astype(np.float32)
     lat = (np.pi / 2 - (np.arange(EQ_H) + 0.5) / EQ_H * np.pi).astype(np.float32)
     lon, lat = np.meshgrid(lon, lat)
@@ -128,9 +130,12 @@ def equirect(front, rf):
         return np.where(th < THETA0, np.sin(th), h)
     rho = np.hypot(x, y) + 1e-9
     k = radius(z) / rho
-    # The far hemisphere samples the same artwork at the same (x, y), so the
-    # texture is continuous across the limb and the city is all the planet shows.
-    return bilinear(front, 0.5 + x * k * rf, 0.5 - y * k * rf)
+    f = bilinear(front, 0.5 + x * k * rf, 0.5 - y * k * rf)
+    # Far side: u runs the other way so the previous city reads unmirrored when
+    # the sphere has turned 180 degrees to face it.
+    b = bilinear(back, 0.5 - x * k * rb, 0.5 - y * k * rb)
+    t = np.clip((z + 0.15) / 0.3, 0, 1); t = t * t * (3 - 2 * t)
+    return f * t[..., None] + b * (1 - t[..., None])
 
 
 def save_exr(name, rgb, path):
@@ -379,6 +384,13 @@ def exr_integrity(path):
 
 
 # ------------------------------------------------------------------- main --
+def previous_key(key):
+    allk = sorted((f[:-4] for f in os.listdir(f"{ROOT}/MINI-PLANET") if f.endswith(".png")), key=lambda k: int(k.split("_")[0]))
+    prev = allk[allk.index(key) - 1]
+    assert prev != key, "a city must never be its own far side"
+    return prev
+
+
 def run(keys):
     os.makedirs(OUT, exist_ok=True)
     report = []
@@ -387,10 +399,10 @@ def run(keys):
         ta = time.time()
         city = key.split("_", 1)[1]
         d = f"{OUT}/{key}"; os.makedirs(d, exist_ok=True)
-        fp = f"{ROOT}/MINI-PLANET/{key}.png"
-        front = load_rgb(fp)
-        mf = measure(front)
-        eq = equirect(front, mf["r_ring"])
+        fp = f"{ROOT}/MINI-PLANET/{key}.png"; bp = f"{ROOT}/MINI-PLANET/{previous_key(key)}.png"
+        front, back = load_rgb(fp), load_rgb(bp)
+        mf, mb = measure(front), measure(back)
+        eq = equirect(front, back, mf["r_ring"], mb["r_ring"])
         tex = save_exr(f"TEX_{key}", eq, f"{d}/{city}_equirect.exr")
         scale = 1.0 / mf["r_ring"]  # sphere diameter lands on the measured ring diameter
         ob, sh, cam = build_scene(tex, mf, scale)
@@ -425,13 +437,13 @@ def run(keys):
         wd = f"{WEB_OUT}/{key}"; os.makedirs(wd, exist_ok=True)
         seq = []
         for i in range(WEB_STEPS + 1):
-            set_yaw(ob, sh, 180 - i * 180 / WEB_STEPS)  # far side faces camera first, the city last
+            set_yaw(ob, sh, 180 - i * 180 / WEB_STEPS)  # previous city faces camera first, this city last
             p = f"{wd}/f_{i:02d}.png"; render(p, WEB_PX, "PNG"); seq.append(read_png(p))
         q = qa(key, front, mf, final_png, seq)
         q["file_integrity"] = dict(states=st, pass_=all(v["pass_"] for v in st.values()))
         ok = all(v["pass_"] for v in q.values())
         side = {
-            "source_image": os.path.basename(fp),
+            "source_image": os.path.basename(fp), "far_side_image": os.path.basename(bp),
             "source_resolution": list(front.shape[:2][::-1]),
             "distortion_model": "orthographic hemisphere, limb at measured cloud-ring radius",
             "distortion_coefficient": round(mf["r_ring"] / 0.5, 4),
