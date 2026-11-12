@@ -1,51 +1,73 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { dayPhaseAt, msUntilNextMinute, type DayPhase } from "@/lib/day-phase";
 
 const CHOICE_KEY = "conative-day-phase";
 
 const isPhase = (v: unknown): v is DayPhase => v === "day" || v === "night";
 
-function readChoice(): DayPhase | null {
-  try {
-    const v = window.sessionStorage.getItem(CHOICE_KEY);
-    return isPhase(v) ? v : null;
-  } catch {
-    return null;
+// One shared store, so the sun/moon buttons in the navbar and the hero
+// backgrounds always agree. Without a choice the phase follows the visitor's
+// clock, re-checked at every minute boundary (6:30 am / 6:31 pm). A sun/moon
+// choice pins it for the rest of the visit (session storage); ?phase=day|night
+// in the URL pins it for previews.
+let clock: DayPhase | null = null;
+let choice: DayPhase | null = null;
+let started = false;
+let timer = 0;
+const listeners = new Set<() => void>();
+const emit = () => listeners.forEach((l) => l());
+
+function start() {
+  if (started) return;
+  started = true;
+  const forced = new URLSearchParams(window.location.search).get("phase");
+  if (isPhase(forced)) choice = forced;
+  else {
+    try {
+      const saved = window.sessionStorage.getItem(CHOICE_KEY);
+      if (isPhase(saved)) choice = saved;
+    } catch {
+      // Storage can be blocked (private mode); fall back to the clock.
+    }
   }
+  const tick = () => {
+    const now = new Date();
+    clock = dayPhaseAt(now);
+    emit();
+    timer = window.setTimeout(tick, msUntilNextMinute(now) + 50);
+  };
+  tick();
 }
 
-// phase is null until mounted: the server cannot know the visitor's clock, so
-// it is only decided in the browser. Without a choice it follows the clock and
-// is re-checked at every minute boundary (6:30 am / 6:31 pm). Picking day or
-// night with the sun/moon buttons pins it for the rest of the visit (session
-// storage); ?phase=day|night in the URL pins it for previews.
-export function useDayPhase(): { phase: DayPhase | null; choose: (p: DayPhase) => void } {
-  const [clock, setClock] = useState<DayPhase | null>(null);
-  const [choice, setChoice] = useState<DayPhase | null>(null);
-
-  useEffect(() => {
-    const forced = new URLSearchParams(window.location.search).get("phase");
-    setChoice(isPhase(forced) ? forced : readChoice());
-    let timer = 0;
-    const tick = () => {
-      const now = new Date();
-      setClock(dayPhaseAt(now));
-      timer = window.setTimeout(tick, msUntilNextMinute(now) + 50);
-    };
-    tick();
-    return () => window.clearTimeout(timer);
-  }, []);
-
-  const choose = useCallback((p: DayPhase) => {
-    setChoice(p);
-    try {
-      window.sessionStorage.setItem(CHOICE_KEY, p);
-    } catch {
-      // Storage can be blocked (private mode); the choice still holds for this page.
+function subscribe(listener: () => void) {
+  listeners.add(listener);
+  start();
+  return () => {
+    listeners.delete(listener);
+    if (listeners.size === 0) {
+      window.clearTimeout(timer);
+      started = false;
     }
-  }, []);
+  };
+}
 
-  return { phase: choice ?? clock, choose };
+const getSnapshot = (): DayPhase | null => choice ?? clock;
+const getServerSnapshot = (): DayPhase | null => null;
+
+export function chooseDayPhase(p: DayPhase) {
+  choice = p;
+  try {
+    window.sessionStorage.setItem(CHOICE_KEY, p);
+  } catch {
+    // The choice still holds for this page.
+  }
+  emit();
+}
+
+// null on the server and until mounted: only the browser knows the clock.
+export function useDayPhase(): { phase: DayPhase | null; choose: (p: DayPhase) => void } {
+  const phase = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  return { phase, choose: chooseDayPhase };
 }

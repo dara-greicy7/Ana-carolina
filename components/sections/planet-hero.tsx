@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useMotionValueEvent, useReducedMotion, useScroll, useSpring } from "framer-motion";
-import { ChevronDown, Moon, Sun } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { destinations } from "@/lib/destinations";
 import { heroPlanetDisc, heroPlanetFrames, heroPlanetFrame } from "@/lib/hero-planets";
@@ -43,7 +43,7 @@ export function PlanetHero({ title, subtitle, description, primaryCta, secondary
   const [index, setIndex] = useState(0);
   // Exactly one city is ever behind the planet. The swap waits until the new
   // close-up has decoded, so it is a clean cut rather than a blank or a blend.
-  const { phase, choose } = useDayPhase();
+  const { phase } = useDayPhase();
   const [bg, setBg] = useState<{ slug: string; phase: DayPhase } | null>(null);
   const count = destinations.length;
 
@@ -229,32 +229,6 @@ export function PlanetHero({ title, subtitle, description, primaryCta, secondary
         >
           Skip cities
         </button>
-        <div
-          role="group"
-          aria-label="Background photos"
-          className="absolute bottom-6 left-4 md:bottom-8 md:left-6 flex items-center gap-1 rounded-full border border-white/15 bg-white/5 p-1 backdrop-blur"
-        >
-          {(
-            [
-              { value: "day", label: "Show daytime photos", Icon: Sun },
-              { value: "night", label: "Show night photos", Icon: Moon },
-            ] as const
-          ).map(({ value, label, Icon }) => (
-            <button
-              key={value}
-              type="button"
-              onClick={() => choose(value)}
-              aria-pressed={phase === value}
-              aria-label={label}
-              title={label}
-              className={`flex h-9 w-9 items-center justify-center rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-300 ${
-                phase === value ? "bg-white text-slate-900" : "text-white/70 hover:bg-white/10 hover:text-white"
-              }`}
-            >
-              <Icon aria-hidden className="h-4 w-4" />
-            </button>
-          ))}
-        </div>
       </div>
     </section>
   );

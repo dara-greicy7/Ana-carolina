@@ -6,6 +6,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { DayNightToggle } from "@/components/ui/day-night-toggle";
 
 // Section anchors live on the homepage. Linking to "/#id" lets every page use the
 // same menu: on the homepage the click smooth-scrolls, elsewhere it navigates home.
@@ -97,7 +98,9 @@ export function Navbar() {
             </a>
           ))}
         </nav>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 md:gap-3">
+          {/* Day/night only changes the home page hero backgrounds. */}
+          {pathname === "/" && <DayNightToggle />}
           <Button
             asChild
             className="bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 hidden md:flex text-xs font-normal tracking-[0.2em] text-white/70 hover:text-white"
