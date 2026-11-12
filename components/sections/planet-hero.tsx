@@ -5,7 +5,7 @@ import { useMotionValueEvent, useReducedMotion, useScroll, useSpring } from "fra
 import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { destinations } from "@/lib/destinations";
-import { PLANET_SPIN_DEG, miniPlanet } from "@/lib/hero-planets";
+import { heroPlanetDisc, heroPlanetFrames, heroPlanetFrame } from "@/lib/hero-planets";
 import type { DayPhase } from "@/lib/day-phase";
 import { useDayPhase } from "@/lib/use-day-phase";
 
@@ -19,8 +19,8 @@ type PlanetHeroProps = {
 
 // Scroll budget per destination, in viewport heights.
 const PER_CITY_VH = 40;
-// Within one destination: the planet spins upright, then holds, with that
-// city's close-up as the backdrop the whole time.
+// Within one destination: the far side turns to face you, the planet holds,
+// with that city's close-up as the backdrop the whole time.
 const TURN_END = 0.55;
 
 const clamp = (v: number, lo = 0, hi = 1) => Math.min(hi, Math.max(lo, v));
@@ -79,7 +79,6 @@ export function PlanetHero({ title, subtitle, description, primaryCta, secondary
 
     let raf = 0;
     let last = -1;
-    let shown: HTMLImageElement | null = null;
     const frame = () => {
       raf = requestAnimationFrame(frame);
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -97,48 +96,40 @@ export function PlanetHero({ title, subtitle, description, primaryCta, secondary
 
       const i = Math.min(count - 1, Math.floor(pos));
       const local = pos - i;
-      // Keep the last decoded planet on screen until the next one is ready, so
-      // the planet never blinks out on a slow connection.
-      const img = get(miniPlanet(destinations[i].slug)) ?? shown;
-      shown = img;
-      if (i + 1 < count) get(miniPlanet(destinations[i + 1].slug));
-      if (i + 2 < count) get(miniPlanet(destinations[i + 2].slug));
+      const slug = destinations[i].slug;
+      // Warm the whole turn of this planet and the opening frames of the next one.
+      for (let f = 0; f < heroPlanetFrames; f++) get(heroPlanetFrame(slug, f));
+      if (i + 1 < count) for (let f = 0; f < 4; f++) get(heroPlanetFrame(destinations[i + 1].slug, f));
 
-      // Scrolling down turns the planet clockwise until the city stands
-      // upright; scrolling up turns it back. The next planet takes over with a
-      // clean cut at the same scroll point as the background photo, because a
-      // dissolve between two artworks reads as a double exposure.
       const turn = ease(clamp(local / TURN_END));
-      const angle = (-PLANET_SPIN_DEG * (1 - turn) * Math.PI) / 180;
+      const want = Math.round(turn * (heroPlanetFrames - 1));
+      // Fall back to the nearest decoded frame so the planet never blinks out.
+      let img: HTMLImageElement | null = null;
+      for (let d = 0; d < heroPlanetFrames && !img; d++) {
+        img = get(heroPlanetFrame(slug, Math.max(0, want - d))) ?? get(heroPlanetFrame(slug, Math.min(heroPlanetFrames - 1, want + d)));
+      }
+      // The planet never shrinks, moves or fades out: over the last tenth of a
+      // destination the next planet's far side dissolves in on top of it, at
+      // the same size and place, so a planet is always on screen.
+      const handoff = i === count - 1 ? 0 : ease(clamp((local - 0.9) / 0.1));
+      const next = handoff > 0 ? get(heroPlanetFrame(destinations[i + 1].slug, 0)) : null;
 
       ctx.clearRect(0, 0, w, h);
-      // Desktop sizing measured from the approved reference: the disc spans
-      // 90.5% of the viewport height (43.2% of its width), its right edge sits
-      // at 94.4% of the width and its centre at 54.1% of the height.
-      const wide = canvas.clientWidth >= 768;
-      const disc = wide ? Math.min(0.905 * h, 0.432 * w) : Math.min(w, h) * 0.92 * 0.98;
-      const cx = wide ? 0.944 * w - disc / 2 : w / 2;
-      const cy = wide ? 0.541 * h : h / 2;
       if (img) {
-        ctx.save();
-        ctx.translate(cx, cy);
-        ctx.rotate(angle);
-        ctx.drawImage(img, -disc / 2, -disc / 2, disc, disc);
-        ctx.restore();
-        // The light does not turn with the planet: a fixed highlight and
-        // limb shadow make the spinning artwork read as a lit sphere.
-        // Stops short of the artwork's faded rim (scripts/build-mini-planets.py
-        // fades the last 3% of the width) so it never draws past the planet.
-        const limb = disc * 0.47;
-        const shade = ctx.createRadialGradient(cx - disc * 0.18, cy - disc * 0.2, disc * 0.05, cx, cy, limb);
-        shade.addColorStop(0, "rgba(255,255,255,0.10)");
-        shade.addColorStop(0.55, "rgba(255,255,255,0)");
-        shade.addColorStop(0.85, "rgba(2,6,23,0.10)");
-        shade.addColorStop(1, "rgba(2,6,23,0.22)");
-        ctx.fillStyle = shade;
-        ctx.beginPath();
-        ctx.arc(cx, cy, limb, 0, Math.PI * 2);
-        ctx.fill();
+        // Desktop sizing measured from the approved reference: the disc spans
+        // 90.5% of the viewport height (43.2% of its width), its right edge sits
+        // at 94.4% of the width and its centre at 54.1% of the height.
+        const wide = canvas.clientWidth >= 768;
+        const disc = wide ? Math.min(0.905 * h, 0.432 * w) : Math.min(w, h) * 0.92 * 0.98;
+        const size = disc / heroPlanetDisc;
+        const cx = wide ? 0.944 * w - disc / 2 : w / 2;
+        const cy = wide ? 0.541 * h : h / 2;
+        ctx.drawImage(img, cx - size / 2, cy - size / 2, size, size);
+        if (next) {
+          ctx.globalAlpha = handoff;
+          ctx.drawImage(next, cx - size / 2, cy - size / 2, size, size);
+          ctx.globalAlpha = 1;
+        }
       }
     };
     raf = requestAnimationFrame(frame);
@@ -201,7 +192,7 @@ export function PlanetHero({ title, subtitle, description, primaryCta, secondary
       <section aria-label="Welcome" className="relative flex min-h-screen items-center bg-[#0b1224] px-6 pt-24 pb-16 md:px-12">
         <div className="mx-auto grid w-full max-w-7xl items-center gap-10 md:grid-cols-2">
           {copy}
-          <img src={miniPlanet(destinations[0].slug)} alt={`Little planet of ${destinations[0].name}`} width={1254} height={1254} className="mx-auto w-full max-w-[560px]" />
+          <img src={heroPlanetFrame(destinations[0].slug, heroPlanetFrames - 1)} alt={`Little planet of ${destinations[0].name}`} width={720} height={720} className="mx-auto w-full max-w-[560px]" />
         </div>
       </section>
     );
@@ -222,7 +213,7 @@ export function PlanetHero({ title, subtitle, description, primaryCta, secondary
           </div>
           <canvas ref={canvasRef} aria-hidden className="h-full max-h-[78vh] w-full md:absolute md:inset-0 md:max-h-none" />
         </div>
-        <p className="sr-only">Scrolling spins a small planet for each of our {count} destinations.</p>
+        <p className="sr-only">Scrolling turns a small planet for each of our {count} destinations.</p>
         <button
           type="button"
           onClick={nextCity}

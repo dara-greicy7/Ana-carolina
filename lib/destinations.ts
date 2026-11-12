@@ -8,7 +8,7 @@ export type Destination = {
 };
 
 // Order mirrors the numbered source files in PLACES/MINI-PLANET; each slug maps to
-// /mini-planets/<slug>.webp (hero planet artwork) and /planets/<slug>-{day,night}-{1920,3840}.webp (see lib/day-phase.ts).
+// /hero-planets/<slug>/ (Blender turn frames) and /planets/<slug>-{day,night}-{1920,3840}.webp (see lib/day-phase.ts).
 export const destinations: Destination[] = [
   {
     slug: "paris",
